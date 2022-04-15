@@ -7,6 +7,7 @@
 #include <SFML/Audio.hpp>
 #include <list>
 #include <random>
+#include <unordered_map>
 
 const int WIDTH = 800;
 const int HEIGHT = 600;
@@ -26,7 +27,10 @@ const double ALLOWED_NEGATIVE_SPEED = -0.1f;
 const double LOWER_SPEED_BOUND = -100.f;
 const unsigned short UPPER_SPEED_BOUND= 500;
 const char MAX_ALLOWED_COLLIDABLES = 10;
-
+struct twoFloats {
+	float x;
+	float y;
+};
 
 struct pollEventArgs { //transition this into class with custom constructor
 	sf::Window* window = nullptr;
@@ -35,19 +39,13 @@ struct pollEventArgs { //transition this into class with custom constructor
 	float rotationSpeed = 0;
 } args;
 
-struct speedFloats {
-	float& x;
-	float& y;
-};
 
 enum class Sizes { SM, MED, LRG};
-
-
 void pollEvents(pollEventArgs& args);
 bool locationAllowed(float x, float y, float radius);
 void processMovement(float& speed, float& dt);
 void addProjectile(sf::Vector2f vec);
-speedFloats getSpeeds(float speed, float dt, sf::CircleShape loc);
+twoFloats getSpeeds(float speed, float dt, sf::CircleShape loc);
 bool checkCollision(sf::CircleShape projectile, sf::RectangleShape shape);
 bool drawProjectile(sf::RenderWindow& window, std::list<sf::CircleShape>::iterator it);
 void spawnCollidables(Sizes size, int count, int xSize, int ySize);
@@ -73,11 +71,7 @@ int main()
 
 	if (!music.openFromFile("assets/sounds/music.wav")) return -1;
 	//music.play();
-
 	
-
-
-
 
 	while (window.isOpen()) {
 		time = deltaClock.restart();
@@ -95,15 +89,21 @@ int main()
 		std::list<sf::CircleShape>::iterator it = projectiles.begin();
 		std::list<sf::ConvexShape>::iterator itConvex = collidables.begin();
 
-		while (it != projectiles.end()) {
-			bool shouldDraw = drawProjectile(window, it);
-			if (!shouldDraw) it = projectiles.erase(it);
-			else it++;
-		} 
+		//while (itConvex != collidables.end()) {
+		//	window.draw(*itConvex);
+		//	itConvex++;
+		//}
 
-		while (itConvex != collidables.end()) {
-			window.draw(*itConvex);
-			itConvex++;
+		while (it != projectiles.end()) {
+			sf::CircleShape shape = *it;
+			/*if (!shape.getGlobalBounds().intersects(collisionCoords[shape.getPosition()])) {
+				window.draw(shape);
+			}
+			else {
+				projectiles.erase(it);
+			}*/
+
+			it++;
 		}
 
 		window.display();
@@ -202,13 +202,10 @@ void processMovement(float& speed, float& dt) {
 	float playerX = player.playerPos.x;
 	float playerY = player.playerPos.y;
 
-	
 
-	speedFloats speeds = getSpeeds(speed, dt, player.playerObj);
+	twoFloats speeds = getSpeeds(speed, dt, player.playerObj);
 
 	if (locationAllowed(playerX + speeds.x, playerY + speeds.y, radius)) {
-		
-
 		player.move(speeds.x, speeds.y);
 	}
 	else {
@@ -225,7 +222,7 @@ void addProjectile(sf::Vector2f vec)
 
 }
 
-speedFloats getSpeeds(float speed, float dt, sf::CircleShape loc) {
+twoFloats getSpeeds(float speed, float dt, sf::CircleShape loc) {
 
 	float x = (speed * sin(loc.getRotation() * PI / 180) *
 		dt);
@@ -247,7 +244,7 @@ bool drawProjectile(sf::RenderWindow& window, std::list<sf::CircleShape>::iterat
 {
 	sf::CircleShape& projectile = *it;
 
-	speedFloats projectileSpeeds = getSpeeds(PROJECTILE_SPEED, args.dt, projectile);
+	twoFloats projectileSpeeds = getSpeeds(PROJECTILE_SPEED, args.dt, projectile);
 	float x, y;
 	x = projectileSpeeds.x;
 	y = projectileSpeeds.y;
@@ -288,6 +285,7 @@ void spawnCollidables(Sizes size, int count, int xSize, int ySize)
 	shape.setPoint(5, sf::Vector2f(4, 10));
 	shape.setPoint(6, sf::Vector2f(10, 0));
 
+
 	float x = distX(eng);
 	float y = distY(eng);
 	float angle = rand() % 360;
@@ -295,9 +293,11 @@ void spawnCollidables(Sizes size, int count, int xSize, int ySize)
 	if (size == Sizes::SM) shape.setScale(0.5f, 0.5f);
 	else if (size == Sizes::MED) shape.setScale(0.75f, 0.75f);
 	else if (size == Sizes::LRG) shape.setScale(1.f, 1.f);
+
 	if (locationAllowed(x, y, 0)) shape.setPosition(x, y);
 	shape.setRotation(angle);
-
+	
 	collidables.push_back(shape);
+
 }
 
