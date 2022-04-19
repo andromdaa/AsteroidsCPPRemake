@@ -1,303 +1,306 @@
-#include "Player.h"
 #include <iostream>
-#include <math.h>
 #include <cmath>
-#include <vector>
-#include "CircleShapeNode.h"
 #include <SFML/Audio.hpp>
 #include <list>
 #include <random>
-#include <unordered_map>
+#include <SFML/Graphics.hpp>
 
 const int WIDTH = 800;
 const int HEIGHT = 600;
-sf::SoundBuffer buffer;
-sf::Sound sound;
-sf::Music music;
-sf::CircleShape circles[5];
-Player player(15.f, WIDTH, HEIGHT); //make this extend/implement sf::CircleShape?
+//sf::SoundBuffer buffer;
+//sf::Sound sound;
+//sf::Music music;
 std::list<sf::CircleShape> projectiles;
 std::list<sf::ConvexShape> collidables;
-const double ROTATION_SPEED = 0.005f;
+const float ROTATION_SPEED = 0.005f;
 const float PROJECTILE_SPEED = 600.f;
 const double PI = 3.14159265f;
-const double UPPER_ROTATION_BOUND = .1f;
-const double LOWER_ROTATION_BOUND = -.1f;
-const double ALLOWED_NEGATIVE_SPEED = -0.1f;
-const double LOWER_SPEED_BOUND = -100.f;
-const unsigned short UPPER_SPEED_BOUND= 500;
+const float UPPER_ROTATION_BOUND = .1f;
+const float LOWER_ROTATION_BOUND = -.1f;
+const float LOWER_SPEED_BOUND = -100.f;
+const unsigned short UPPER_SPEED_BOUND = 500;
 const char MAX_ALLOWED_COLLIDABLES = 10;
+
 struct twoFloats {
-	float x;
-	float y;
+    float x;
+    float y;
 };
 
 struct pollEventArgs { //transition this into class with custom constructor
-	sf::Window* window = nullptr;
-	float dt = 0;
-	float speed = 0;
-	float rotationSpeed = 0;
+    sf::Window *window = nullptr;
+    float dt = 0;
+    float speed = 0;
+    float rotationSpeed = 0;
 } args;
 
 
-enum class Sizes { SM, MED, LRG};
-void pollEvents(pollEventArgs& args);
-bool locationAllowed(float x, float y, float radius);
-void processMovement(float& speed, float& dt);
-void addProjectile(sf::Vector2f vec);
-twoFloats getSpeeds(float speed, float dt, sf::CircleShape loc);
-bool checkCollision(sf::CircleShape projectile, sf::RectangleShape shape);
-bool drawProjectile(sf::RenderWindow& window, std::list<sf::CircleShape>::iterator it);
-void spawnCollidables(Sizes size, int count, int xSize, int ySize);
+enum class Sizes {
+    SM, MED, LRG
+};
 
-int main()
-{
-	sf::ContextSettings settings; //add prompt would you like to enable anti-aliasing
-	sf::Clock deltaClock;
-	sf::Time time;
+sf::CircleShape getPlayer();
 
-	settings.antialiasingLevel = 8;
-	sf::RenderWindow window(sf::VideoMode(WIDTH, HEIGHT), "Asteroids", sf::Style::Default, settings);
+void pollEvents(pollEventArgs &args, sf::CircleShape &player);
 
-	//window settings
-	args.window = &window;
-	//player settings
+bool locationAllowed(float x, float y, float radius, const sf::ConvexShape *collide = nullptr);
 
-	//load assets
-	if (!buffer.loadFromFile("assets/sounds/fire.ogg"))
-		return -1;
-	sound.setBuffer(buffer);
-	sound.setVolume(50.f);
+void playerInputMovement(float &speed, float &dt, sf::CircleShape &player);
 
-	if (!music.openFromFile("assets/sounds/music.wav")) return -1;
-	//music.play();
-	
+twoFloats getSpeeds(float speed, float dt, const sf::Shape &loc);
 
-	while (window.isOpen()) {
-		time = deltaClock.restart();
-		args.dt = time.asSeconds();
+sf::CircleShape *drawProjectile(sf::RenderWindow &window, std::list<sf::CircleShape>::iterator it);
 
-		//event polling, to update what is to be rendered next
-        pollEvents(args);
+void spawnCollide(int xSize, int ySize);
 
-		//render things
-		window.clear();
-		window.draw(player.playerObj);
+int main() {
 
-		spawnCollidables(Sizes(rand() % 3), collidables.size(), window.getSize().x, window.getSize().y);
+    sf::ContextSettings settings; //add prompt would you like to enable anti-aliasing
+    sf::Clock deltaClock;
+    sf::Time time;
+    settings.antialiasingLevel = 8;
+    sf::RenderWindow window(sf::VideoMode(WIDTH, HEIGHT), "Asteroids", sf::Style::Default, settings);
 
-		std::list<sf::CircleShape>::iterator it = projectiles.begin();
-		std::list<sf::ConvexShape>::iterator itConvex = collidables.begin();
+    args.window = &window;
 
-		//while (itConvex != collidables.end()) {
-		//	window.draw(*itConvex);
-		//	itConvex++;
-		//}
+    spawnCollide(window.getSize().x, window.getSize().y);
 
-		while (it != projectiles.end()) {
-			sf::CircleShape shape = *it;
-			/*if (!shape.getGlobalBounds().intersects(collisionCoords[shape.getPosition()])) {
-				window.draw(shape);
-			}
-			else {
-				projectiles.erase(it);
-			}*/
+    sf::CircleShape player = getPlayer();
 
-			it++;
-		}
+    while (window.isOpen()) {
+        time = deltaClock.restart();
+        args.dt = time.asSeconds();
 
-		window.display();
-	}
+        //event polling, to update what is to be rendered next
 
-	return 0;
+        pollEvents(args, player);
+        //render things
+        window.clear();
+        window.draw(player);
+
+        auto it = projectiles.begin();
+        auto itConvex = collidables.begin();
+
+        while (itConvex != collidables.end()) {
+            window.draw(*itConvex);
+            itConvex++;
+        }
+
+        itConvex = collidables.begin();
+        while (it != projectiles.end()) {
+            sf::CircleShape *temp = drawProjectile(window, it);
+            if (temp != nullptr) {
+                while (itConvex != collidables.end()) {
+                    sf::ConvexShape tempC = *itConvex;
+                    sf::FloatRect bounds = tempC.getGlobalBounds();
+                    window.draw(tempC);
+
+                    if (temp->getGlobalBounds().intersects(sf::FloatRect(
+                            bounds.left - 5, bounds.top - 10, bounds.width - 5, bounds.height - 5))) //reverse this
+                    {
+                        collidables.erase(itConvex++);
+                        projectiles.erase(it++);
+                    } else {
+                        itConvex++;
+                    }
+                }
+                it++;
+            } else {
+                projectiles.erase(it++);
+            }
+        }
+
+        window.display();
+    }
+
+    return 0;
 }
 
 
-void pollEvents(pollEventArgs& args) {
-	sf::Event event;
-	sf::Window& window = *args.window;
-	window.pollEvent(event); //required function, also used for space bar released
+void pollEvents(pollEventArgs &args, sf::CircleShape &player) {
 
-	float dt = args.dt; 
-	float& speed = args.speed; //reference due to continous value
-	float& rotationSpeed = args.rotationSpeed; //reference due to continous value
-	bool up, down, left, right, space; //key states
-	up = sf::Keyboard::isKeyPressed(sf::Keyboard::Up);
-	down = sf::Keyboard::isKeyPressed(sf::Keyboard::Down);
-	left = sf::Keyboard::isKeyPressed(sf::Keyboard::Left);
-	right = sf::Keyboard::isKeyPressed(sf::Keyboard::Right);
-	space = ((event.type == sf::Event::KeyReleased)
-		&& (event.key.code == sf::Keyboard::Space));
+    sf::Event event{};
+    sf::Window &window = *args.window;
+    window.pollEvent(event); //required function, also used for space bar released
 
-	//if statements not chained due to causing reduced performance
+    float dt = args.dt;
+    float &speed = args.speed; //reference due to continuous value
+    float &rotationSpeed = args.rotationSpeed; //reference due to continuous value
+    bool up, down, left, right, space; //key states
+    up = sf::Keyboard::isKeyPressed(sf::Keyboard::Up);
+    down = sf::Keyboard::isKeyPressed(sf::Keyboard::Down);
+    left = sf::Keyboard::isKeyPressed(sf::Keyboard::Left);
+    right = sf::Keyboard::isKeyPressed(sf::Keyboard::Right);
+    space = ((event.type == sf::Event::KeyReleased)
+             && (event.key.code == sf::Keyboard::Space));
 
-	if (speed >= UPPER_SPEED_BOUND) {
-		speed = UPPER_SPEED_BOUND;
-	}   
+    //if statements not chained due to causing reduced performance
 
-	if (speed <= LOWER_SPEED_BOUND) {
-		speed = LOWER_SPEED_BOUND;
-	}
+    if (speed >= UPPER_SPEED_BOUND) {
+        speed = UPPER_SPEED_BOUND;
+    }
 
-	if (rotationSpeed >= UPPER_ROTATION_BOUND) {
-		rotationSpeed = UPPER_ROTATION_BOUND;
-	}
+    if (speed <= LOWER_SPEED_BOUND) {
+        speed = LOWER_SPEED_BOUND;
+    }
 
-	if (rotationSpeed <= LOWER_ROTATION_BOUND) {
-		rotationSpeed = LOWER_ROTATION_BOUND;
-	}
+    if (rotationSpeed >= UPPER_ROTATION_BOUND) {
+        rotationSpeed = UPPER_ROTATION_BOUND;
+    }
 
-	if(up) {
-		speed += 0.25f;
-		processMovement(speed, dt);
-	}
+    if (rotationSpeed <= LOWER_ROTATION_BOUND) {
+        rotationSpeed = LOWER_ROTATION_BOUND;
+    }
 
-	if (!up) {
-		if (speed > 0) {
-			speed -= 0.10f;
-		}
+    if (up) {
+        speed += 0.25f;
+        playerInputMovement(speed, dt, player);
+    }
 
-		if (speed < 0) {
-			speed += 0.035f;
-		}
-		processMovement(speed, dt);
-	}
+    if (!up) {
+        if (speed > 0) {
+            speed -= 0.10f;
+        }
 
-	if (down) {
-		speed -= 0.03f;
-	}
+        if (speed < 0) {
+            speed += 0.035f;
+        }
+        playerInputMovement(speed, dt, player);
+    }
 
-	if (left) {
-		rotationSpeed -= ROTATION_SPEED;
-		player.rotate(rotationSpeed);
-	}
+    if (down) {
+        speed -= 0.03f;
+    }
 
-	if (right) {
-		rotationSpeed += ROTATION_SPEED;
-		player.rotate(rotationSpeed);
-	}
+    if (left) {
+        rotationSpeed -= ROTATION_SPEED;
+        player.rotate(rotationSpeed);
+    }
 
-	if (space) {
-		//sound.play();
-		addProjectile(player.playerPos);
-	}
-	
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
-		window.close();
-	}
+    if (right) {
+        rotationSpeed += ROTATION_SPEED;
+        player.rotate(rotationSpeed);
+    }
+
+    if (space) {
+        sf::CircleShape temp(2.5f);
+        temp.setPosition(player.getTransform().transformPoint(player.getPoint(0)));
+        temp.setRotation(player.getRotation());
+        projectiles.push_back(temp);
+    }
+
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
+        window.close();
+    }
 }
 
-bool locationAllowed(float x, float y, float radius) {
-	if (x + radius > WIDTH || x < 0 + radius) {
-		return false;
-	}
-	if (y + radius > HEIGHT || y < 0 + radius) {
-		return false;
-	}
-	return true;
+bool locationAllowed(float x, float y, float radius, const sf::ConvexShape *collide) {
+    if (x + radius > WIDTH || x < 0 + radius) { //window out of bounds
+        return false;
+    }
+    if (y + radius > HEIGHT || y < 0 + radius) { //window out of bounds
+        return false;
+    }
+
+    return true;
 }
 
-void processMovement(float& speed, float& dt) {
-	float radius = player.playerRadius;
-	float playerX = player.playerPos.x;
-	float playerY = player.playerPos.y;
+void playerInputMovement(float &speed, float &dt, sf::CircleShape &player) {
+    float radius = player.getRadius();
+    float playerX = player.getPosition().x;
+    float playerY = player.getPosition().y;
 
-
-	twoFloats speeds = getSpeeds(speed, dt, player.playerObj);
-
-	if (locationAllowed(playerX + speeds.x, playerY + speeds.y, radius)) {
-		player.move(speeds.x, speeds.y);
-	}
-	else {
-		speed = -speed;
-	}
+    twoFloats speeds = getSpeeds(speed, dt, player);
+    if (locationAllowed(playerX + speeds.x, playerY + speeds.y, radius)) {
+        player.move(speeds.x, speeds.y);
+    } else {
+        speed = -speed;
+    }
 }
 
-void addProjectile(sf::Vector2f vec)
-{
-	sf::CircleShape temp(2.5f);
-	temp.setPosition(player.getPoint());
-	temp.setRotation(player.playerObj.getRotation());
-	projectiles.push_back(temp);
+twoFloats getSpeeds(float speed, float dt, const sf::Shape &loc) {
 
+    float x = (speed * sin(loc.getRotation() * (float) PI / 180) *
+               dt);
+    float y = (-speed * cos(loc.getRotation() * (float) PI / 180) *
+               dt);
+
+    return {
+            x,
+            y
+    };
 }
 
-twoFloats getSpeeds(float speed, float dt, sf::CircleShape loc) {
+sf::CircleShape *drawProjectile(sf::RenderWindow &window, std::list<sf::CircleShape>::iterator it) {
+    sf::CircleShape &projectile = *it;
+//    sf::ConvexShape& collide = *itCollide;
 
-	float x = (speed * sin(loc.getRotation() * PI / 180) *
-		dt);
-	float y = ( -speed * cos(loc.getRotation() * PI / 180) *
-		dt);
+    twoFloats projectileSpeeds = getSpeeds(PROJECTILE_SPEED, args.dt, projectile);
+//    twoFloats collideSpeeds = getSpeeds(COLLIDE_SPEED, args.dt, collide);
 
+    float pX, pY, cX, cY;
+    pX = projectileSpeeds.x;
+    pY = projectileSpeeds.y;
+    pX += projectile.getPosition().x;
+    pY += projectile.getPosition().y;
 
-	return {
-		x,
-		y 
-	};
+//    cX = collideSpeeds.x;
+//    cY = collideSpeeds.y;
+//    cX += projectile.getPosition().x;
+//    cY += projectile.getPosition().y;
+
+    if (locationAllowed(pX, pY, projectile.getRadius())) {
+        projectile.move(projectileSpeeds.x, projectileSpeeds.y);
+        window.draw(projectile);
+        return &projectile;
+    } else {
+        return nullptr;
+    }
 }
 
-bool checkCollision(sf::CircleShape projectile, sf::RectangleShape shape) {
-	return projectile.getGlobalBounds().intersects(shape.getGlobalBounds());
-}
+void spawnCollide(int xSize, int ySize) {
+    std::mt19937 eng;
 
-bool drawProjectile(sf::RenderWindow& window, std::list<sf::CircleShape>::iterator it)
-{
-	sf::CircleShape& projectile = *it;
+    std::random_device r;
+    std::seed_seq seed{r(), r(), r(), r(), r(), r(), r(), r()};
+    eng.seed(seed);
 
-	twoFloats projectileSpeeds = getSpeeds(PROJECTILE_SPEED, args.dt, projectile);
-	float x, y;
-	x = projectileSpeeds.x;
-	y = projectileSpeeds.y;
-	x += projectile.getPosition().x;
-	y += projectile.getPosition().y;
-
-	if (locationAllowed(x, y, projectile.getRadius())) {
-		projectile.move(projectileSpeeds.x, projectileSpeeds.y);
-		window.draw(projectile);
-		return true;
-	}
-	else {
-		return false;
-	}
-}
-
-void spawnCollidables(Sizes size, int count, int xSize, int ySize)
-{
-	std::mt19937 eng;
-
-	std::random_device r;
-	std::seed_seq seed{ r(), r(), r(), r(), r(), r(), r(), r() };
-	eng.seed(seed);
-
-	std::uniform_int_distribution<> distX(0, xSize - 1);
-	std::uniform_int_distribution<> distY(0, ySize - 1);
+    std::uniform_int_distribution<> distX(0, xSize - 1);
+    std::uniform_int_distribution<> distY(0, ySize - 1);
 
 
-	if (count >= MAX_ALLOWED_COLLIDABLES) return;
+    sf::ConvexShape shape;
+    shape.setPointCount(6);
+    shape.setPoint(0, sf::Vector2f(10, 0));
+    shape.setPoint(1, sf::Vector2f(40, 10));
+    shape.setPoint(2, sf::Vector2f(45, 50));
+    shape.setPoint(3, sf::Vector2f(7, 53));
+    shape.setPoint(4, sf::Vector2f(0, 40));
+    shape.setPoint(5, sf::Vector2f(4, 10));
 
-	sf::ConvexShape shape;
-	shape.setPointCount(6);
-	shape.setPoint(0, sf::Vector2f(10, 0));
-	shape.setPoint(1, sf::Vector2f(40, 10));
-	shape.setPoint(2, sf::Vector2f(45, 50));
-	shape.setPoint(3, sf::Vector2f(7, 53));
-	shape.setPoint(4, sf::Vector2f(0, 40));
-	shape.setPoint(5, sf::Vector2f(4, 10));
-	shape.setPoint(6, sf::Vector2f(10, 0));
+    for (int amount = 0; amount < MAX_ALLOWED_COLLIDABLES; amount++) {
+        auto size = Sizes(rand() % 3);
 
+        float x = distX(eng);
+        float y = distY(eng);
+        float angle = rand() % 360;
 
-	float x = distX(eng);
-	float y = distY(eng);
-	float angle = rand() % 360;
+        if (size == Sizes::SM) shape.setScale(0.5f, 0.5f);
+        else if (size == Sizes::MED) shape.setScale(0.75f, 0.75f);
+        else if (size == Sizes::LRG) shape.setScale(1.f, 1.f);
 
-	if (size == Sizes::SM) shape.setScale(0.5f, 0.5f);
-	else if (size == Sizes::MED) shape.setScale(0.75f, 0.75f);
-	else if (size == Sizes::LRG) shape.setScale(1.f, 1.f);
+        if (locationAllowed(x, y, 0)) shape.setPosition(x, y);
+        shape.setRotation(angle);
 
-	if (locationAllowed(x, y, 0)) shape.setPosition(x, y);
-	shape.setRotation(angle);
-	
-	collidables.push_back(shape);
+        auto bounds = shape.getLocalBounds();
+        shape.setOrigin(bounds.width / 2, bounds.height / 2);
+        collidables.push_back(shape);
+    }
 
 }
 
+sf::CircleShape getPlayer() {
+    sf::CircleShape player(15.f, 3);
+    player.setOrigin(player.getRadius(), player.getRadius());
+    player.setPosition(WIDTH / 2, HEIGHT / 2);
+    return player;
+}
