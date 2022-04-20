@@ -3,13 +3,10 @@
 #include <SFML/Audio.hpp>
 #include <list>
 #include <random>
-#include <SFML/Graphics.hpp>
 
 const int WIDTH = 800;
 const int HEIGHT = 600;
-//sf::SoundBuffer buffer;
-//sf::Sound sound;
-//sf::Music music;
+
 std::list<sf::CircleShape> projectiles;
 std::list<sf::ConvexShape> collidables;
 const float ROTATION_SPEED = 0.005f;
@@ -38,9 +35,16 @@ enum class Sizes {
     SM, MED, LRG
 };
 
+enum class State {
+    STATE_ROTATE,
+    STATE_FORWARD,
+    STATE_SLOW,
+    STATE_FIRE
+};
+
 sf::CircleShape getPlayer();
 
-void pollEvents(pollEventArgs &args, sf::CircleShape &player);
+void pollEvents(pollEventArgs &args, sf::CircleShape &player, sf::Sound& sound);
 
 bool locationAllowed(float x, float y, float radius, const sf::ConvexShape *collide = nullptr);
 
@@ -57,6 +61,34 @@ int main() {
     sf::ContextSettings settings; //add prompt would you like to enable anti-aliasing
     sf::Clock deltaClock;
     sf::Time time;
+
+    //load resources
+
+    sf::Music music;
+    sf::SoundBuffer buffer;
+    sf::Sound sound;
+
+    if (!music.openFromFile("assets/sounds/music.wav")) return -1;
+    music.setVolume(25.f);
+    music.play();
+
+    if (!buffer.loadFromFile("assets/sounds/fire.ogg")) return -1;
+    sound.setBuffer(buffer);
+    sound.setVolume(50.f);
+
+    //load font
+
+    sf::Font font;
+    int scoreVal = 0;
+    sf::Text score;
+    if(!font.loadFromFile("C:/Users/Cole/AppData/Local/Microsoft/Windows/Fonts/ARCADECLASSIC.TTF")) return -1;
+    score.setFont(font);
+    score.setString("Score  " + std::to_string(scoreVal));
+    score.setCharacterSize(24);
+    score.setFillColor(sf::Color::White);
+
+    //window settings
+
     settings.antialiasingLevel = 8;
     sf::RenderWindow window(sf::VideoMode(WIDTH, HEIGHT), "Asteroids", sf::Style::Default, settings);
 
@@ -71,10 +103,11 @@ int main() {
         args.dt = time.asSeconds();
 
         //event polling, to update what is to be rendered next
+        pollEvents(args, player, sound);
 
-        pollEvents(args, player);
         //render things
         window.clear();
+        window.draw(score);
         window.draw(player);
 
         auto it = projectiles.begin();
@@ -97,6 +130,7 @@ int main() {
                     if (temp->getGlobalBounds().intersects(sf::FloatRect(
                             bounds.left - 5, bounds.top - 10, bounds.width - 5, bounds.height - 5))) //reverse this
                     {
+                        score.setString("Score  " + std::to_string(scoreVal += (int) ((100 * tempC.getScale().x) + (75 * tempC.getScale().y))));
                         collidables.erase(itConvex++);
                         projectiles.erase(it++);
                     } else {
@@ -116,7 +150,7 @@ int main() {
 }
 
 
-void pollEvents(pollEventArgs &args, sf::CircleShape &player) {
+void pollEvents(pollEventArgs &args, sf::CircleShape &player, sf::Sound& sound) {
 
     sf::Event event{};
     sf::Window &window = *args.window;
@@ -186,6 +220,7 @@ void pollEvents(pollEventArgs &args, sf::CircleShape &player) {
         temp.setPosition(player.getTransform().transformPoint(player.getPoint(0)));
         temp.setRotation(player.getRotation());
         projectiles.push_back(temp);
+        sound.play();
     }
 
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
@@ -304,3 +339,4 @@ sf::CircleShape getPlayer() {
     player.setPosition(WIDTH / 2, HEIGHT / 2);
     return player;
 }
+
