@@ -1,18 +1,19 @@
 //
-// Created by Cole on 4/20/2022.
+// Created by Cole on 4/21/2022.
 //
 
-#include "PlayerState.h"
+#include "Player.h"
+#include "states/StationaryState.h"
+#include "Keys.h"
 
+Player::Player(sf::RenderWindow* window) : sf::CircleShape(15.f, 3) {
+    state = StationaryState::Instance();
+    Player::window = window;
 
-class Player : public sf::CircleShape {
-public:
-    virtual void handleInput(sf::Keyboard::Key input) {
-        state->handleInput(*this, input);
-    }
-    virtual void update() {
-        state->update(*this);
-    }
-private:
-    PlayerState* state;
-};
+    setPosition(window->getView().getCenter());
+    setOrigin(getRadius(), getRadius());
+}
+
+void Player::processInput(Player* player, Keys key) {
+        state->processInput(player, key);
+}

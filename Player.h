@@ -1,23 +1,36 @@
-#pragma once
+//
+// Created by Cole on 4/21/2022.
+//
 
-#pragma warning(push, 0)
+#ifndef ASTEROIDSSFML_PLAYER_H
+#define ASTEROIDSSFML_PLAYER_H
+
 #include <SFML/Graphics.hpp>
-#pragma warning(pop)
 
-class Player {
+class PlayerState;
+enum class Keys;
+
+class Player : public sf::CircleShape {
 public:
-	Player(float radius, int WIN_WIDTH, int WIN_HEIGHT);
-	sf::CircleShape playerObj;
-	sf::Vector2f playerPos = playerObj.getPosition();
-	float playerRadius;
-	float rotation;
-	sf::Vector2f getPoint();
-	sf::Vector2f move();
-	void rotate(float angle);
-	void move(float x, float y);
-	
-
+    Player(sf::RenderWindow* window);
+    void processInput(Player*, Keys);
 private:
-	void setOrigin();
-	void setPositionCenter(int width, int height);
+    sf::RenderWindow* window;
+    PlayerState* state;
+    friend class PlayerState;
+    friend class StationaryState;
+    const float ROTATION_INC = 0.005f;
+    const float PROJECTILE_SPEED = 600.f;
+    const double PI = 3.14159265f;
+    const float UPPER_ROTATION_BOUND = .1f;
+    const float LOWER_ROTATION_BOUND = -.1f;
+    const float LOWER_SPEED_BOUND = -100.f;
+    const unsigned short UPPER_SPEED_BOUND = 500;
+    float speed = 0; //reference due to continuous value
+    float rotationSpeed = 0; //reference due to continuous value
+    void changeState(PlayerState* s) {
+        state = s;
+    }
 };
+
+#endif //ASTEROIDSSFML_PLAYER_H
