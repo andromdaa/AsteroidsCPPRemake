@@ -3,11 +3,10 @@
 //
 #include "PlayerState.h"
 #include "../Player.h"
-#include "StationaryState.h"
+#include "PlayingState.h"
 #include "SFML/Graphics.hpp"
-#include "../Keys.h"
 
-void PlayerState::processInput(Player* player, Keys key) {}
+void PlayerState::processInput(Player* player) {}
 
 void PlayerState::changeState(Player* p, PlayerState* s) {
     p->changeState(s);

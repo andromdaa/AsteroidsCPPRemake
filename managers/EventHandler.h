@@ -11,7 +11,11 @@
 
 class EventHandler {
 public:
-    static void handle(sf::RenderWindow&);
+//    static EventHandler* Instance(sf::RenderWindow &window);
+    explicit EventHandler(sf::RenderWindow &window);
+    void handle();
+private:
+    sf::RenderWindow& window;
 };
 
 #endif //ASTEROIDSSFML_EVENTHANDLER_H

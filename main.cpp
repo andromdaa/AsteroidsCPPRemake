@@ -1,126 +1,95 @@
 #include <iostream>
 #include <cmath>
-#include <SFML/Audio.hpp>
+//#include <SFML/Audio.hpp>
 #include <list>
-#include <random>
-#include "SFML/Graphics.hpp"
-#include "Player.h"
-#include "Keys.h"
-#include "managers/EventHandler.h"
+#include "GameManager.h"
+#include "SFML/Audio/AlResource.hpp"
+//
+//std::list<sf::ConvexShape> collidables;
+//
+//
+//struct twoFloats {
+//    float x;
+//    float y;
+//};
 
-const int WIDTH = 800;
-const int HEIGHT = 600;
-
-std::list<sf::CircleShape> projectiles;
-std::list<sf::ConvexShape> collidables;
-const float ROTATION_SPEED = 0.005f;
-const float PROJECTILE_SPEED = 600.f;
-const double PI = 3.14159265f;
-const float UPPER_ROTATION_BOUND = .1f;
-const float LOWER_ROTATION_BOUND = -.1f;
-const float LOWER_SPEED_BOUND = -100.f;
-const unsigned short UPPER_SPEED_BOUND = 500;
-const char MAX_ALLOWED_COLLIDABLES = 10;
-
-struct twoFloats {
-    float x;
-    float y;
-};
-
-struct pollEventArgs { //transition this into class with custom constructor
-    sf::Window *window = nullptr;
-    float dt = 0;
-    float speed = 0;
-    float rotationSpeed = 0;
-} args;
+//struct pollEventArgs { //transition this into class with custom constructor
+//    sf::Window *window = nullptr;
+//    float dt = 0;
+//    float speed = 0;
+//    float rotationSpeed = 0;
+//} args;
 
 
-enum class Sizes {
-    SM, MED, LRG
-};
-
-sf::CircleShape getPlayer();
-
-void pollEvents(pollEventArgs &args, sf::CircleShape &player, sf::Sound& sound);
-
-bool locationAllowed(float x, float y, float radius, const sf::ConvexShape *collide = nullptr);
-
-void playerInputMovement(float &speed, float &dt, sf::CircleShape &player);
-
-twoFloats getSpeeds(float speed, float dt, const sf::Shape &loc);
-
-sf::CircleShape *drawProjectile(sf::RenderWindow &window, std::list<sf::CircleShape>::iterator it);
-
-void spawnCollide(int xSize, int ySize);
+//enum class Sizes {
+//    SM, MED, LRG
+//};
+//
+//sf::CircleShape getPlayer();
+//
+//void pollEvents(pollEventArgs &args, sf::CircleShape &player, sf::Sound& sound);
+//
+//bool locationAllowed(float x, float y, float radius, const sf::ConvexShape *collide = nullptr);
+//
+//void playerInputMovement(float &speed, float &dt, sf::CircleShape &player);
+//
+//twoFloats getSpeeds(float speed, float dt, const sf::Shape &loc);
+//
+//sf::CircleShape *drawProjectile(sf::RenderWindow &window, std::list<sf::CircleShape>::iterator it);
+//
+//void spawnCollide(int xSize, int ySize);
 
 int main() {
+    GameManager gameManger;
+    GameManager::resourceManager->startMusic();
 
-    sf::ContextSettings settings; //add prompt would you like to enable anti-aliasing
-    sf::Clock deltaClock;
-    sf::Time time;
+    while(gameManger.window.isOpen()) {
+        gameManger.tick();
+        gameManger.eventHandler.handle();
+        gameManger.player.processInput(&gameManger.player);
 
-    //load resources
+        gameManger.window.clear();
 
-    sf::Music music;
-    sf::SoundBuffer buffer;
-    sf::Sound sound;
+        gameManger.window.draw(gameManger.player);
 
-    if (!music.openFromFile("assets/sounds/music.wav")) return -1;
-    music.setVolume(25.f);
-    music.play();
+        gameManger.window.display();
+    }
 
-    if (!buffer.loadFromFile("assets/sounds/fire.ogg")) return -1;
-    sound.setBuffer(buffer);
-    sound.setVolume(50.f);
 
-    //load font
+    return 0;
+}
 
-    sf::Font font;
-    int scoreVal = 0;
-    sf::Text score;
-    if(!font.loadFromFile("C:/Users/Cole/AppData/Local/Microsoft/Windows/Fonts/ARCADECLASSIC.TTF")) return -1;
-    score.setFont(font);
-    score.setString("Score  " + std::to_string(scoreVal));
-    score.setCharacterSize(24);
-    score.setFillColor(sf::Color::White);
-
-    //window settings
-
-    settings.antialiasingLevel = 8;
-    sf::RenderWindow window(sf::VideoMode(WIDTH, HEIGHT), "Asteroids", sf::Style::Default, settings);
-
-    args.window = &window;
+//    args.window = &window;
 
 //    spawnCollide(window.getSize().x, window.getSize().y);
 
-    Player player(&window);
 
 
-    while(window.isOpen()) {
-        EventHandler::handle(window);
-
-        bool up, down, left, right, space; //key states
-        up = sf::Keyboard::isKeyPressed(sf::Keyboard::Up);
-        down = sf::Keyboard::isKeyPressed(sf::Keyboard::Down);
-        left = sf::Keyboard::isKeyPressed(sf::Keyboard::Left);
-        right = sf::Keyboard::isKeyPressed(sf::Keyboard::Right);
-//        space = ((event.type == sf::Event::KeyReleased)
-//                 && (event.key.code == sf::Keyboard::Space));
-
-        if (left) {
-            player.processInput(&player, Keys::Left);
-        }
-
-        if (right) {
-            player.processInput(&player, Keys::Right);
-        }
-
-        window.clear();
-        window.draw(score);
-        window.draw(player);
-        window.display();
-
-    }
+//    while(window.isOpen()) {
+//        EventHandler::handle(window);
+//
+//        bool up, down, left, right, space; //key states
+//        up = sf::Keyboard::isKeyPressed(sf::Keyboard::Up);
+//        down = sf::Keyboard::isKeyPressed(sf::Keyboard::Down);
+//        left = sf::Keyboard::isKeyPressed(sf::Keyboard::Left);
+//        right = sf::Keyboard::isKeyPressed(sf::Keyboard::Right);
+////        space = ((event.type == sf::Event::KeyReleased)
+////                 && (event.key.code == sf::Keyboard::Space));
+//
+//        if (left) {
+//            player.processInput(&player, Keys::Left);
+//        }
+//
+//        if (right) {
+//            player.processInput(&player, Keys::Right);
+//        }
+//
+//        window.clear();
+//        window.draw(score);
+//        window.draw(player);
+//        window.display();
+//
+//    }
 
 
 
@@ -173,89 +142,8 @@ int main() {
 //        window.display();
 //    }
 
-    return 0;
-}
 
-
-//void pollEvents(pollEventArgs &args, sf::CircleShape &player, sf::Sound& sound) {
-//
-//    sf::Event event{};
-//    sf::Window &window = *args.window;
-//    window.pollEvent(event); //required function, also used for space bar released
-//
-//    float dt = args.dt;
-//    float &speed = args.speed; //reference due to continuous value
-//    float &rotationSpeed = args.rotationSpeed; //reference due to continuous value
-//    bool up, down, left, right, space; //key states
-//    up = sf::Keyboard::isKeyPressed(sf::Keyboard::Up);
-//    down = sf::Keyboard::isKeyPressed(sf::Keyboard::Down);
-//    left = sf::Keyboard::isKeyPressed(sf::Keyboard::Left);
-//    right = sf::Keyboard::isKeyPressed(sf::Keyboard::Right);
-//    space = ((event.type == sf::Event::KeyReleased)
-//             && (event.key.code == sf::Keyboard::Space));
-//
-//    //if statements not chained due to causing reduced performance
-//
-//    if (speed >= UPPER_SPEED_BOUND) {
-//        speed = UPPER_SPEED_BOUND;
-//    }
-//
-//    if (speed <= LOWER_SPEED_BOUND) {
-//        speed = LOWER_SPEED_BOUND;
-//    }
-//
-//    if (rotationSpeed >= UPPER_ROTATION_BOUND) {
-//        rotationSpeed = UPPER_ROTATION_BOUND;
-//    }
-//
-//    if (rotationSpeed <= LOWER_ROTATION_BOUND) {
-//        rotationSpeed = LOWER_ROTATION_BOUND;
-//    }
-//
-//    if (up) {
-//        speed += 0.25f;
-//        playerInputMovement(speed, dt, player);
-//    }
-//
-//    if (!up) {
-//        if (speed > 0) {
-//            speed -= 0.10f;
-//        }
-//
-//        if (speed < 0) {
-//            speed += 0.035f;
-//        }
-//        playerInputMovement(speed, dt, player);
-//    }
-//
-//    if (down) {
-//        speed -= 0.03f;
-//    }
-//
-//    if (left) {
-//        rotationSpeed -= ROTATION_SPEED;
-//        player.rotate(rotationSpeed);
-//    }
-//
-//    if (right) {
-//        rotationSpeed += ROTATION_SPEED;
-//        player.rotate(rotationSpeed);
-//    }
-//
-//    if (space) {
-//        sf::CircleShape temp(2.5f);
-//        temp.setPosition(player.getTransform().transformPoint(player.getPoint(0)));
-//        temp.setRotation(player.getRotation());
-//        projectiles.push_back(temp);
-//        sound.play();
-//    }
-//
-//    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
-//        window.close();
-//    }
-//}
-//
-//bool locationAllowed(float x, float y, float radius, const sf::ConvexShape *collide) {
+//bool locationAllowed(float x, float y, float radius) {
 //    if (x + radius > WIDTH || x < 0 + radius) { //window out of bounds
 //        return false;
 //    }

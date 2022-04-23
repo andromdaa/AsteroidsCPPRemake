@@ -6,16 +6,17 @@
 #define ASTEROIDSSFML_PLAYERSTATE_H
 
 class Player;
-class StationaryState;
+class PlayingState;
+#include "../managers/ProjectileManager.h"
 enum class Keys;
 
 class PlayerState {
 public:
-    static StationaryState* stationary;
-//    static StationaryState stationary;
-//    static StationaryState stationary;
-//    static StationaryState stationary;
-    virtual void processInput(Player*, Keys);
+    static PlayingState* stationary;
+//    static PlayingState stationary;
+//    static PlayingState stationary;
+//    static PlayingState stationary;
+    virtual void processInput(Player*);
 protected:
     void changeState(Player*, PlayerState*);
 };

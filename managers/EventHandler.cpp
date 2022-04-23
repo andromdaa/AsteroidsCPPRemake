@@ -4,11 +4,24 @@
 
 #include "EventHandler.h"
 
-void EventHandler::handle(sf::RenderWindow& window) {
+
+EventHandler::EventHandler(sf::RenderWindow &window) : window(window) {}
+
+
+void EventHandler::handle() {
     sf::Event event{};
     window.pollEvent(event);
 
     if(event.key.code == sf::Keyboard::Escape) {
         window.close();
     }
+
 }
+
+//EventHandler *EventHandler::Instance(sf::RenderWindow &window) {
+//    static EventHandler* self;
+//    if(self == nullptr) {
+//        self = new EventHandler(window);
+//    }
+//    return self;
+//}
