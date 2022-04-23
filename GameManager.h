@@ -5,7 +5,6 @@
 #ifndef ASTEROIDSSFML_GAMEMANAGER_H
 #define ASTEROIDSSFML_GAMEMANAGER_H
 
-
 #include "Player.h"
 #include "managers/EventHandler.h"
 #include "managers/ResourceManager.h"
@@ -16,21 +15,21 @@ class GameManager {
 public:
     GameManager();
     void tick();
-    inline static float dt = 0;
     sf::RenderWindow window;
     Player player;
     EventHandler eventHandler;
-    inline static ProjectileManager* projectileHandler = ProjectileManager::Instance();
     inline static AsteroidManager* asteroidHandler = AsteroidManager::Instance();
+    inline static ProjectileManager* projectileHandler = ProjectileManager::Instance();
     inline static ResourceManager* resourceManager = ResourceManager::Instance();
-private:
     static sf::Vector2f getMovement(const sf::Shape& shape, float speed);
+    void removeCollisions();
+private:
+    inline static float dt = 0;
     static bool locationAllowed(float x, float y, sf::Vector2f movementInc, float radius);
     sf::Clock clock;
     const static int WIDTH = 800;
     const static int HEIGHT = 600;
     constexpr static float ROTATION_SPEED = 0.005f;
-    constexpr static float PROJECTILE_SPEED = 600.f;
     constexpr static float PI = 3.14159265f;
     constexpr static float UPPER_ROTATION_BOUND = .1f;
     constexpr static float LOWER_ROTATION_BOUND = -.1f;
@@ -43,6 +42,7 @@ private:
     friend class Player;
     friend class EventHandler;
     friend class AsteroidManager;
+
 };
 
 

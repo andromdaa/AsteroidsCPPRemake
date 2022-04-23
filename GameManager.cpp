@@ -5,13 +5,15 @@
 #include "GameManager.h"
 #include "states/PlayerState.h"
 #include <cmath>
+#include <iostream>
 
 GameManager::GameManager()
         :
         window(sf::VideoMode(GameManager::WIDTH, GameManager::HEIGHT), "Asteroids",
                sf::Style::Default),
         player(),
-        eventHandler(window) {}
+        eventHandler(window, *this) {
+}
 
 void GameManager::tick() {
     GameManager::dt = GameManager::clock.restart().asSeconds();
@@ -24,6 +26,12 @@ bool GameManager::locationAllowed(float x, float y, sf::Vector2f movementInc, fl
 }
 
 sf::Vector2f GameManager::getMovement(const sf::Shape& shape, float speed) {
-    return sf::Vector2f(speed * sin(shape.getRotation()* PI / 180) * dt,
-                        -speed * cos(shape.getRotation()* PI / 180) * dt);
+    float x = (speed * sin(shape.getRotation() * (float) PI / 180) *
+               dt);
+    float y = (-speed * cos(shape.getRotation() * (float) PI / 180) *
+               dt);
+
+    return {x, y};
 }
+
+

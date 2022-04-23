@@ -49,8 +49,4 @@ void PlayingState::processInput(Player* player) {
     }
 
 
-    if(Keyboard::isKeyPressed(sf::Keyboard::Space)) {
-        GameManager::projectileHandler->spawnProjectile(player);
-//        GameManager::resourceManager->playFireSound();
-    }
 }

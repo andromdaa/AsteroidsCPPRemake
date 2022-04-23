@@ -3,9 +3,12 @@
 //
 
 #include "EventHandler.h"
+#include "../GameManager.h"
 
 
-EventHandler::EventHandler(sf::RenderWindow &window) : window(window) {}
+EventHandler::EventHandler(sf::RenderWindow &window, GameManager& gameManager)
+: window(window),
+gameManager(gameManager) {}
 
 
 void EventHandler::handle() {
@@ -14,6 +17,11 @@ void EventHandler::handle() {
 
     if(event.key.code == sf::Keyboard::Escape) {
         window.close();
+    }
+
+    if(event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::Space) {
+        GameManager::projectileHandler->spawnProjectile(&gameManager.player);
+        GameManager::resourceManager->playFireSound();
     }
 
 }

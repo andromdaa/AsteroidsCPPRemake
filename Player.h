@@ -12,7 +12,7 @@ enum class Keys;
 
 class Player : public sf::CircleShape {
 public:
-    Player();
+    explicit Player();
     void processInput(Player*);
 private:
     void updatePlayerPos();

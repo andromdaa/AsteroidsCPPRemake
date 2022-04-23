@@ -9,13 +9,18 @@
 #include <SFML/Graphics.hpp>
 
 class Player;
+class GameManager;
 class ProjectileManager {
 public:
     static ProjectileManager* Instance();
-    void update();
-    ProjectileManager();
+    void drawAll(sf::RenderWindow& window);
+    void draw(sf::RenderWindow&, sf::CircleShape& projectile);
 private:
+    explicit ProjectileManager();
+    constexpr static float PROJECTILE_SPEED = 600.f;
     friend class PlayingState;
+    friend class EventHandler;
+    friend class GameManager;
     std::list<sf::CircleShape> projectiles;
     void spawnProjectile(Player* player);
 };
