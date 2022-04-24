@@ -8,7 +8,6 @@
 #include <SFML/Graphics.hpp>
 #include <list>
 
-
 class AsteroidManager {
 public:
     AsteroidManager();
@@ -23,6 +22,7 @@ private:
     std::list<sf::ConvexShape> asteroids;
     static int checkIntersect(int nvert, const float *vertx, const float *verty, float testx, float testy);
 };
+
 
 
 

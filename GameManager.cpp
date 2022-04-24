@@ -34,4 +34,38 @@ sf::Vector2f GameManager::getMovement(const sf::Shape& shape, float speed) {
     return {x, y};
 }
 
+void GameManager::removeCollisions() {
+    auto pIt = projectileHandler->projectiles.begin();
+    auto aIt = asteroidHandler->asteroids.begin();
 
+    for(int i = 0; i < projectileHandler->projectiles.size(); i++) {
+        auto projectile = std::next(pIt, i);
+        for(int j = 0; j < asteroidHandler->asteroids.size(); j++) {
+            auto asteroid = std::next(aIt, j);
+            float x[] {
+                asteroid->getTransform().transformPoint(asteroid->getPoint(0)).x,
+                asteroid->getTransform().transformPoint(asteroid->getPoint(1)).x,
+                asteroid->getTransform().transformPoint(asteroid->getPoint(2)).x,
+                asteroid->getTransform().transformPoint(asteroid->getPoint(3)).x,
+                asteroid->getTransform().transformPoint(asteroid->getPoint(4)).x,
+                asteroid->getTransform().transformPoint(asteroid->getPoint(5)).x,
+            };
+            float y[] = {
+                    asteroid->getTransform().transformPoint(asteroid->getPoint(0)).y,
+                    asteroid->getTransform().transformPoint(asteroid->getPoint(1)).y,
+                    asteroid->getTransform().transformPoint(asteroid->getPoint(2)).y,
+                    asteroid->getTransform().transformPoint(asteroid->getPoint(3)).y,
+                    asteroid->getTransform().transformPoint(asteroid->getPoint(4)).y,
+                    asteroid->getTransform().transformPoint(asteroid->getPoint(5)).y,
+            };
+
+            int intersect = AsteroidManager::checkIntersect(6, x, y,projectile->getPosition().x, projectile->getPosition().y);
+            if(intersect == 1) {
+                i++;
+                j++;
+                projectileHandler->projectiles.erase(projectile++);
+                asteroidHandler->asteroids.erase(asteroid++);
+            }
+        }
+    }
+}

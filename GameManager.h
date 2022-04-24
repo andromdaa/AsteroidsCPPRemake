@@ -22,7 +22,7 @@ public:
     inline static ProjectileManager* projectileHandler = ProjectileManager::Instance();
     inline static ResourceManager* resourceManager = ResourceManager::Instance();
     static sf::Vector2f getMovement(const sf::Shape& shape, float speed);
-    void removeCollisions();
+    static void removeCollisions();
 private:
     inline static float dt = 0;
     static bool locationAllowed(float x, float y, sf::Vector2f movementInc, float radius);

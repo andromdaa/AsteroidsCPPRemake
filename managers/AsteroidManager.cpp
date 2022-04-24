@@ -34,7 +34,7 @@ void AsteroidManager::createAsteroids() {
     std::uniform_real_distribution<float> angleDistribution(0, 360);
 
     sf::ConvexShape shape;
-    shape.setOutlineThickness(1.f);
+    shape.setOutlineThickness(1.5);
     shape.setOutlineColor(sf::Color::White);
     shape.setFillColor(sf::Color::Transparent);
     shape.setPointCount(6);

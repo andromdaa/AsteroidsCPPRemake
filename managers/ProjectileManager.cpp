@@ -31,11 +31,10 @@ void ProjectileManager::spawnProjectile(Player* player) {
 }
 
 void ProjectileManager::drawAll(sf::RenderWindow& window) {
+    GameManager::removeCollisions();
+
     for(sf::CircleShape& projectile : projectiles) {
         draw(window, projectile);
     }
 }
-
-
-
 
