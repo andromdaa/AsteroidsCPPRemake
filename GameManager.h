@@ -13,7 +13,7 @@
 
 class GameManager {
 public:
-    GameManager();
+    explicit GameManager(sf::ContextSettings& settings);
     void tick();
     sf::RenderWindow window;
     Player player;
@@ -22,27 +22,20 @@ public:
     inline static ProjectileManager* projectileHandler = ProjectileManager::Instance();
     inline static ResourceManager* resourceManager = ResourceManager::Instance();
     static sf::Vector2f getMovement(const sf::Shape& shape, float speed);
-    static void removeCollisions();
+    static int removeCollisions();
 private:
     inline static float dt = 0;
     static bool locationAllowed(float x, float y, sf::Vector2f movementInc, float radius);
     sf::Clock clock;
     const static int WIDTH = 800;
     const static int HEIGHT = 600;
-    constexpr static float ROTATION_SPEED = 0.005f;
     constexpr static float PI = 3.14159265f;
-    constexpr static float UPPER_ROTATION_BOUND = .1f;
-    constexpr static float LOWER_ROTATION_BOUND = -.1f;
-    constexpr static float LOWER_SPEED_BOUND = -100.f;
-    const static unsigned short UPPER_SPEED_BOUND = 500;
-    const static char MAX_ALLOWED_COLLIDABLES = 10;
     friend class PlayingState;
     friend class ResourceManager;
     friend class ProjectileManager;
     friend class Player;
     friend class EventHandler;
     friend class AsteroidManager;
-
 };
 
 

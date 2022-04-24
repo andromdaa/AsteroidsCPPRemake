@@ -21,7 +21,7 @@ void EventHandler::handle() {
 
     if(event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::Space) {
         GameManager::projectileHandler->spawnProjectile(&gameManager.player);
-//        GameManager::resourceManager->playFireSound();
+        GameManager::resourceManager->playFireSound();
     }
 
 }

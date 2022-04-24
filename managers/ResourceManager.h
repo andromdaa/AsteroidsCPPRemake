@@ -13,18 +13,16 @@ public:
     static ResourceManager* Instance();
     void startMusic();
     void playFireSound();
-//    void playDestroySound();
-    sf::SoundBuffer buffer;
-    sf::Sound sound;
+    void updateScore(int scoreInc, sf::RenderWindow& window);
+
 private:
     ResourceManager();
+    sf::SoundBuffer buffer;
+    sf::Sound sound;
     int scoreVal = 0;
     sf::Font font;
     sf::Text score;
     sf::Music music;
-
-
-    void updateScore();
 
 };
 

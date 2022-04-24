@@ -1,8 +1,9 @@
 #include "GameManager.h"
-#include <SFML/System.hpp>
 int main() {
-    GameManager gameManger;
-//    GameManager::resourceManager->startMusic();
+    sf::ContextSettings settings;
+    settings.antialiasingLevel = 8;
+    GameManager gameManger(settings);
+    GameManager::resourceManager->startMusic();
     GameManager::asteroidHandler->createAsteroids();
 
     while(gameManger.window.isOpen()) {
@@ -12,7 +13,6 @@ int main() {
         gameManger.player.processInput(&gameManger.player);
 
         gameManger.window.clear();
-
         gameManger.window.draw(gameManger.player);
 
         GameManager::projectileHandler->drawAll(gameManger.window);
@@ -21,7 +21,13 @@ int main() {
         gameManger.window.display();
     }
 
-
     return 0;
 }
 
+/*
+ * TODO:
+ * Health System
+ * Starry Background
+ * Smooth asteroid movement/rotation (perlin noise?)
+ * Break larger asteroids into smaller when destroyed
+ */

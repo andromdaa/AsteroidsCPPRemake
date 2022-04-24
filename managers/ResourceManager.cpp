@@ -6,7 +6,6 @@
 #include <iostream>
 
 ResourceManager::ResourceManager() {
-
     if (!music.openFromFile("assets/sounds/music.wav")) std::cout << "Music Error" << std::endl;
     music.setVolume(25.f);
 
@@ -21,9 +20,11 @@ ResourceManager::ResourceManager() {
     score.setFillColor(sf::Color::White);
 }
 
-void ResourceManager::updateScore() {
-
-}
+void ResourceManager::updateScore(int scoreInc, sf::RenderWindow& window) {
+    scoreVal += scoreInc;
+    score.setString("Score " + std::to_string(scoreVal));
+    window.draw(score);
+;}
 
 void ResourceManager::startMusic() {
     ResourceManager::music.play();
@@ -40,5 +41,7 @@ ResourceManager *ResourceManager::Instance() {
     }
     return self;
 }
+
+
 
 

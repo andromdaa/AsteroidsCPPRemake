@@ -5,12 +5,11 @@
 #include "GameManager.h"
 #include "states/PlayerState.h"
 #include <cmath>
-#include <iostream>
 
-GameManager::GameManager()
+GameManager::GameManager(sf::ContextSettings& settings)
         :
         window(sf::VideoMode(GameManager::WIDTH, GameManager::HEIGHT), "Asteroids",
-               sf::Style::Default),
+               sf::Style::Default, settings),
         player(),
         eventHandler(window, *this) {
 }
@@ -34,7 +33,8 @@ sf::Vector2f GameManager::getMovement(const sf::Shape& shape, float speed) {
     return {x, y};
 }
 
-void GameManager::removeCollisions() {
+int GameManager::removeCollisions() {
+    int scoreInc = 0;
     auto pIt = projectileHandler->projectiles.begin();
     auto aIt = asteroidHandler->asteroids.begin();
 
@@ -63,9 +63,11 @@ void GameManager::removeCollisions() {
             if(intersect == 1) {
                 i++;
                 j++;
+                scoreInc += (int) (asteroid->getScale().x * 50);
                 projectileHandler->projectiles.erase(projectile++);
                 asteroidHandler->asteroids.erase(asteroid++);
             }
         }
     }
+    return scoreInc;
 }

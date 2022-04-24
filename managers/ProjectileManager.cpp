@@ -31,8 +31,8 @@ void ProjectileManager::spawnProjectile(Player* player) {
 }
 
 void ProjectileManager::drawAll(sf::RenderWindow& window) {
-    GameManager::removeCollisions();
-
+    int scoreInc = GameManager::removeCollisions();
+    GameManager::resourceManager->updateScore(scoreInc, window);
     for(sf::CircleShape& projectile : projectiles) {
         draw(window, projectile);
     }
