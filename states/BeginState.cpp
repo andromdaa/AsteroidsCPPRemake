@@ -5,12 +5,14 @@
 #include "BeginState.h"
 #include "ActiveState.h"
 #include "../GameManager.h"
+#include <cmath>
 
 BeginState::BeginState(sf::RenderWindow &window, GameManager& gameManager) : GameState(window, gameManager) {
     resourceManager.text.setString("Press any key to begin!");
     resourceManager.text.setCharacterSize(24);
     resourceManager.text.setOrigin(resourceManager.text.getLocalBounds().width / 2, resourceManager.text.getLocalBounds().height / 2 );
     resourceManager.text.setPosition((uint16_t) (window.getSize().x / 2), (uint16_t) (window.getSize().y / 2));
+    resourceManager.bounceText(window);
     if(gameManager.enableAudio) resourceManager.startMusic();
 }
 
@@ -28,6 +30,8 @@ void BeginState::transitionState(GameManager *g) {
 
 void BeginState::tickState() {
     handleEvents();
+    drawStars();
+//    resourceManager.bouceText(window);
     resourceManager.beginPlayingText(window);
 }
 
@@ -35,7 +39,7 @@ void BeginState::handleEvents() {
     sf::Event event{};
     window.pollEvent(event);
 
-    if(event.key.code == sf::Keyboard::Escape) {
+    if(event.key.code == sf::Keyboard::Escape && window.hasFocus()) {
         window.close();
     }
 
@@ -43,6 +47,8 @@ void BeginState::handleEvents() {
         transitionState(&gameManager);
     }
 }
+
+
 
 
 

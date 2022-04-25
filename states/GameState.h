@@ -31,9 +31,15 @@ protected:
     ProjectileManager projectileManager;
     AsteroidManager asteroidManager;
     ResourceManager resourceManager;
+    constexpr static float PI = 3.14159265f;
     GameState(sf::RenderWindow& window, GameManager& gameManager);
     void changeState(GameManager*, GameState*);
     static float getDelta();
+    std::list<sf::CircleShape> stars;
+    void drawStars();
+private:
+    const int MAX_STARS = 100;
+    void generateStars();
 };
 
 
