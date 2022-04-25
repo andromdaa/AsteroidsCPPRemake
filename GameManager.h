@@ -5,38 +5,29 @@
 #ifndef ASTEROIDSSFML_GAMEMANAGER_H
 #define ASTEROIDSSFML_GAMEMANAGER_H
 
-#include "Player.h"
-#include "managers/EventHandler.h"
-#include "managers/ResourceManager.h"
-#include "managers/AsteroidManager.h"
-#include "managers/ProjectileManager.h"
+#include <SFML/Window/ContextSettings.hpp>
+#include <SFML/Graphics.hpp>
 
+class GameState;
 class GameManager {
 public:
     explicit GameManager(sf::ContextSettings& settings);
+//    void handleInput();
+    void transitionState();
+    void tickState();
     void tick();
     sf::RenderWindow window;
-    Player player;
-    EventHandler eventHandler;
-    inline static AsteroidManager* asteroidHandler = AsteroidManager::Instance();
-    inline static ProjectileManager* projectileHandler = ProjectileManager::Instance();
-    inline static ResourceManager* resourceManager = ResourceManager::Instance();
-    static sf::Vector2f getMovement(const sf::Shape& shape, float speed);
-    static int removeCollisions();
 private:
-    inline static float dt = 0;
-    static bool locationAllowed(float x, float y, sf::Vector2f movementInc, float radius);
+    GameState* state;
     sf::Clock clock;
+    friend class GameState;
+    void changeState(GameState*);
     const static int WIDTH = 800;
     const static int HEIGHT = 600;
-    constexpr static float PI = 3.14159265f;
-    friend class PlayingState;
-    friend class ResourceManager;
-    friend class ProjectileManager;
-    friend class Player;
-    friend class EventHandler;
-    friend class AsteroidManager;
+    inline static float dt = 0;
 };
+
+
 
 
 #endif //ASTEROIDSSFML_GAMEMANAGER_H

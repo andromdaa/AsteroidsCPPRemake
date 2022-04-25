@@ -5,32 +5,15 @@
 #include <random>
 #include <chrono>
 #include "AsteroidManager.h"
-#include "../GameManager.h"
+#include "../states/ActiveState.h"
 
-AsteroidManager::AsteroidManager() = default;
 
-AsteroidManager *AsteroidManager::Instance() {
-    static AsteroidManager* self;
-    if(self == nullptr) {
-        self = new AsteroidManager;
-    }
-    return self;
-}
-
-int AsteroidManager::checkIntersect(int nvert, const float *vertx, const float *verty, float testx, float testy) {
-    int i, j, c = 0;
-    for (i = 0, j = nvert-1; i < nvert; j = i++) {
-        if ( ((verty[i]>testy) != (verty[j]>testy)) &&
-             (testx < (vertx[j]-vertx[i]) * (testy-verty[i]) / (verty[j]-verty[i]) + vertx[i]) )
-            c = !c;
-    }
-    return c;
-}
+AsteroidManager::AsteroidManager(GameState& gameState) : gameState(gameState) {}
 
 void AsteroidManager::createAsteroids() {
     std::default_random_engine generator(std::chrono::system_clock::now().time_since_epoch().count());
-    std::uniform_real_distribution<float> xDistribution(10, GameManager::WIDTH - 9);
-    std::uniform_real_distribution<float> yDistribution(10, GameManager::HEIGHT - 9);
+    std::uniform_real_distribution<float> xDistribution(10, GameState::getWidth() - 9);
+    std::uniform_real_distribution<float> yDistribution(10, GameState::getHeight() - 9);
     std::uniform_real_distribution<float> angleDistribution(0, 360);
 
     sf::ConvexShape shape;
@@ -52,7 +35,7 @@ void AsteroidManager::createAsteroids() {
         if (size == Sizes::SM) shape.setScale(0.5f, 0.5f);
         else if (size == Sizes::MED) shape.setScale(0.75f, 0.75f);
         else if (size == Sizes::LRG) shape.setScale(1.f, 1.f);
-        if(GameManager::locationAllowed(x, y, sf::Vector2f(), 0)) shape.setPosition(x, y);
+        if(ActiveState::locationAllowed(x, y, sf::Vector2f(), 0)) shape.setPosition(x, y);
         shape.setRotation(angleDistribution(generator));
         auto bounds = shape.getLocalBounds();
         shape.setOrigin(bounds.width / 2, bounds.height / 2);
@@ -66,4 +49,6 @@ void AsteroidManager::drawAll(sf::RenderWindow &window) {
     }
 }
 
-
+//std::list<sf::ConvexShape> &AsteroidManager::getAsteroids() {
+//    return asteroids;
+//}

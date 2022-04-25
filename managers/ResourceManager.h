@@ -14,16 +14,15 @@ public:
     void startMusic();
     void playFireSound();
     void updateScore(int scoreInc, sf::RenderWindow& window);
-
-private:
+    void beginPlayingText(sf::RenderWindow &window);
     ResourceManager();
+private:
     sf::SoundBuffer buffer;
     sf::Sound sound;
     int scoreVal = 0;
     sf::Font font;
-    sf::Text score;
+    sf::Text text;
     sf::Music music;
-
 };
 
 

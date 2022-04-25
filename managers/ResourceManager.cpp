@@ -14,17 +14,24 @@ ResourceManager::ResourceManager() {
     sound.setVolume(50.f);
 
     if(!font.loadFromFile("assets/fonts/ARCADECLASSIC.TTF")) std::cout << "Font Error" << std::endl;
-    score.setFont(font);
-    score.setString("Score  " + std::to_string(scoreVal));
-    score.setCharacterSize(24);
-    score.setFillColor(sf::Color::White);
+    text.setFont(font);
+    text.setFillColor(sf::Color::White);
 }
 
 void ResourceManager::updateScore(int scoreInc, sf::RenderWindow& window) {
+    text.setCharacterSize(24);
     scoreVal += scoreInc;
-    score.setString("Score " + std::to_string(scoreVal));
-    window.draw(score);
-;}
+    text.setString("Score " + std::to_string(scoreVal));
+    window.draw(text);
+}
+
+void ResourceManager::beginPlayingText(sf::RenderWindow& window) {
+    text.setOrigin(text.getLocalBounds().width / 2, text.getLocalBounds().height / 2 );
+    text.setPosition((uint16_t) (window.getSize().x / 2), (uint16_t) (window.getSize().y / 2));
+    text.setString("Press any key to begin!");
+    text.setCharacterSize(24);
+    window.draw(text);
+}
 
 void ResourceManager::startMusic() {
     ResourceManager::music.play();

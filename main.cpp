@@ -3,20 +3,15 @@ int main() {
     sf::ContextSettings settings;
     settings.antialiasingLevel = 8;
     GameManager gameManger(settings);
-    GameManager::resourceManager->startMusic();
-    GameManager::asteroidHandler->createAsteroids();
+    gameManger.transitionState();
 
     while(gameManger.window.isOpen()) {
         //handle all events / state triggers
         gameManger.tick();
-        gameManger.eventHandler.handle();
-        gameManger.player.processInput(&gameManger.player);
 
         gameManger.window.clear();
-        gameManger.window.draw(gameManger.player);
 
-        GameManager::projectileHandler->drawAll(gameManger.window);
-        GameManager::asteroidHandler->drawAll(gameManger.window);
+        gameManger.tickState();
 
         gameManger.window.display();
     }
@@ -26,8 +21,10 @@ int main() {
 
 /*
  * TODO:
+ * Start screen - log player positions and asteroid positions to file and have BeginState emulate that
  * Health System
  * Starry Background
  * Smooth asteroid movement/rotation (perlin noise?)
  * Break larger asteroids into smaller when destroyed
+ * Progressive rotation speed
  */

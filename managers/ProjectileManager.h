@@ -9,20 +9,19 @@
 #include <SFML/Graphics.hpp>
 
 class Player;
-class GameManager;
+class GameState;
 class ProjectileManager {
 public:
-    static ProjectileManager* Instance();
+    explicit ProjectileManager(GameState& gameState);
     void drawAll(sf::RenderWindow& window);
     void draw(sf::RenderWindow&, sf::CircleShape& projectile);
+    void spawnProjectile(Player& player);
+    std::list<sf::CircleShape>& getProjectiles();
 private:
-    explicit ProjectileManager();
+    friend class ActiveState;
+    GameState& gameState;
     constexpr static float PROJECTILE_SPEED = 600.f;
-    friend class PlayingState;
-    friend class EventHandler;
-    friend class GameManager;
     std::list<sf::CircleShape> projectiles;
-    void spawnProjectile(Player* player);
 };
 
 #endif //ASTEROIDSSFML_PROJECTILEMANAGER_H
