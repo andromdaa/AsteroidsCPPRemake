@@ -11,10 +11,9 @@
 using namespace sf;
 
 ActiveState::ActiveState(sf::RenderWindow &window, GameManager& gameManager) :
-        GameState(window, gameManager),
-        player(*this)
+        GameState(window, gameManager)
 {
-    resourceManager.startMusic();
+    resourceManager.text.setCharacterSize(24);
     asteroidManager.createAsteroids();
 }
 
@@ -125,7 +124,7 @@ void ActiveState::handleEvents() {
 
         if(event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::Space) {
             projectileManager.spawnProjectile(player);
-            resourceManager.playFireSound();
+            if(gameManager.enableAudio) resourceManager.playFireSound();
         }
 }
 

@@ -10,9 +10,8 @@
 class ActiveState;
 class Player : public sf::CircleShape {
 public:
-    explicit Player(ActiveState&);
+    explicit Player();
 private:
-    ActiveState& activeState;
     void updatePlayerPos();
     friend class GameManager;
     friend class ActiveState;

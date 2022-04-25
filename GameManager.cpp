@@ -15,6 +15,15 @@ GameManager::GameManager(sf::ContextSettings& settings)
     state = BeginState::Instance(window, *this);
 }
 
+GameManager::GameManager(sf::ContextSettings& settings, bool enableAudio)
+        :
+        window(sf::VideoMode(GameManager::WIDTH, GameManager::HEIGHT), "Asteroids",
+               sf::Style::Default, settings),
+               enableAudio(enableAudio)
+{
+    state = BeginState::Instance(window, *this);
+}
+
 void GameManager::tick() {
     GameManager::dt = GameManager::clock.restart().asSeconds();
 }

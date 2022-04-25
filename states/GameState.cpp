@@ -10,6 +10,7 @@
 GameState::GameState(sf::RenderWindow& window, GameManager& gameManager) :
 gameManager(gameManager),
 window(window),
+player(),
 resourceManager(),
 projectileManager(*this),
 asteroidManager(*this)

@@ -27,6 +27,7 @@ public:
 protected:
     GameManager& gameManager;
     sf::RenderWindow& window;
+    Player player;
     ProjectileManager projectileManager;
     AsteroidManager asteroidManager;
     ResourceManager resourceManager;

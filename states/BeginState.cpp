@@ -7,7 +7,11 @@
 #include "../GameManager.h"
 
 BeginState::BeginState(sf::RenderWindow &window, GameManager& gameManager) : GameState(window, gameManager) {
-//    resourceManager.startMusic();
+    resourceManager.text.setString("Press any key to begin!");
+    resourceManager.text.setCharacterSize(24);
+    resourceManager.text.setOrigin(resourceManager.text.getLocalBounds().width / 2, resourceManager.text.getLocalBounds().height / 2 );
+    resourceManager.text.setPosition((uint16_t) (window.getSize().x / 2), (uint16_t) (window.getSize().y / 2));
+    if(gameManager.enableAudio) resourceManager.startMusic();
 }
 
 BeginState *BeginState::Instance(sf::RenderWindow &window, GameManager& gameManager) {
@@ -24,19 +28,19 @@ void BeginState::transitionState(GameManager *g) {
 
 void BeginState::tickState() {
     handleEvents();
-//    resourceManager.beginPlayingText();
+    resourceManager.beginPlayingText(window);
 }
 
 void BeginState::handleEvents() {
     sf::Event event{};
-//    window.pollEvent(event);
+    window.pollEvent(event);
 
     if(event.key.code == sf::Keyboard::Escape) {
-//        window.close();
+        window.close();
     }
 
     if(event.type == sf::Event::KeyPressed) {
-//        transitionState(gameManager);
+        transitionState(&gameManager);
     }
 }
 

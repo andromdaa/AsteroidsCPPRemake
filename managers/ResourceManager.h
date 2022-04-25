@@ -10,13 +10,16 @@
 
 class ResourceManager {
 public:
-    static ResourceManager* Instance();
+//    static ResourceManager* Instance();
     void startMusic();
     void playFireSound();
     void updateScore(int scoreInc, sf::RenderWindow& window);
     void beginPlayingText(sf::RenderWindow &window);
     ResourceManager();
 private:
+    friend class BeginState;
+    friend class ActiveState;
+    friend class EndState;
     sf::SoundBuffer buffer;
     sf::Sound sound;
     int scoreVal = 0;
