@@ -32,12 +32,12 @@ void ResourceManager::updateScore(int scoreInc, sf::RenderWindow& window) {
 
 
 
-bool ResourceManager::beginPlayingText(sf::RenderWindow& window, double dt, int iteration) {
+bool ResourceManager::beginPlayingText(sf::RenderWindow& window, double dt, double iteration) {
     for(auto& render : beginText) {
         render.move(0, (float) (iteration * dt));
         window.draw(render);
-        if(render.getPosition().y <= 200) return true;
-        if(render.getPosition().y >= 400) return true;
+        if(render.getPosition().y <= 275) return true;
+        if(render.getPosition().y >= 325) return true;
     }
     return false;
 }

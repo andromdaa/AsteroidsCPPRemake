@@ -15,7 +15,7 @@ public:
     void startMusic();
     void playFireSound();
     void updateScore(int scoreInc, sf::RenderWindow& window);
-    bool beginPlayingText(sf::RenderWindow &window, double dt, int iteration);
+    bool beginPlayingText(sf::RenderWindow &window, double dt, double iteration);
     ResourceManager();
 private:
     friend class BeginState;

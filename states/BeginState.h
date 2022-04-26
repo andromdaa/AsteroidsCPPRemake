@@ -17,7 +17,7 @@ private:
     void drawStars();
     void generateStars();
     void handleEvents();
-    int iteration = -1;
+    double iteration = -1.f;
     BeginState(sf::RenderWindow &window, GameManager& gameManager);
     const int MAX_STARS = 100;
 };
