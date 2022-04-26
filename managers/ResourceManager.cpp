@@ -4,7 +4,11 @@
 
 #include "ResourceManager.h"
 #include <iostream>
+#include <fstream>
 #include <cmath>
+#include <fstream>
+#include "../util/Util.h"
+#include "../states/GameState.h"
 
 ResourceManager::ResourceManager() {
     if (!music.openFromFile("assets/sounds/music.wav")) std::cout << "Music Error" << std::endl;
@@ -26,31 +30,25 @@ void ResourceManager::updateScore(int scoreInc, sf::RenderWindow& window) {
     window.draw(text);
 }
 
-void ResourceManager::beginPlayingText(sf::RenderWindow& window) {
-//    int i = 0;
-    for(auto& textItem : beginText) {
-        window.draw(textItem);
-//        textItem.setPosition(textItem.getPosition().x, textItem.getPosition().y + sinf(((360 / 23) * i) * (M_PI / 180) ));
-//        i++;
+
+
+bool ResourceManager::beginPlayingText(sf::RenderWindow& window, double dt, int iteration) {
+    for(auto& render : beginText) {
+        render.move(0, (float) (iteration * dt));
+        window.draw(render);
+        if(render.getPosition().y <= 200) return true;
+        if(render.getPosition().y >= 400) return true;
     }
+    return false;
 }
 
-void ResourceManager::bounceText(sf::RenderWindow& window) {
-    sf::Text positionModel;
-    positionModel.setString("Press any key to begin!");
-    positionModel.setCharacterSize(24);
-    positionModel.setOrigin(positionModel.getLocalBounds().width / 2, positionModel.getLocalBounds().height / 2 );
-    positionModel.setPosition((uint16_t) (window.getSize().x / 2), (uint16_t) (window.getSize().y / 2));
-
-    for (int i = 0; i < 23; i++) {
-        float y = (uint16_t) (window.getSize().y / 2);
+void ResourceManager::genText(float size) {
+    for(int i = 0; i < 23; i++) {
         text.setString(characters[i]);
-        text.setCharacterSize(24);
-        text.setOrigin(text.getLocalBounds().width / 2, text.getLocalBounds().height / 2 );
+        text.setOrigin(text.getLocalBounds().width / 2, text.getLocalBounds().height / 2);
         auto x = (float) (i * text.getCharacterSize());
-        x += 100.f + text.getCharacterSize();
-        text.setPosition(x, (text.getPosition().y + sinf(((360 / 23) * i) * (M_PI / 180) ) * -20));
-//        text.setPosition(x, y);
+        x += 100.f + (float) text.getCharacterSize();
+        text.setPosition(x, size);
         beginText.push_back(text);
     }
 }

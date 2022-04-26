@@ -19,12 +19,16 @@ class GameState {
 public:
     virtual void transitionState(GameManager* g);
     virtual void tickState();
+    virtual void update(double dt);
+    virtual void renderState();
     static int getWidth();
     static int getHeight();
     ProjectileManager& getProjectileManager();
     AsteroidManager& getAsteroidManager();
     ResourceManager &getResourceManager();
+    double getDelta() const;
 protected:
+    double dt = 0;
     GameManager& gameManager;
     sf::RenderWindow& window;
     Player player;
@@ -34,12 +38,8 @@ protected:
     constexpr static float PI = 3.14159265f;
     GameState(sf::RenderWindow& window, GameManager& gameManager);
     void changeState(GameManager*, GameState*);
-    static float getDelta();
     std::list<sf::CircleShape> stars;
-    void drawStars();
 private:
-    const int MAX_STARS = 100;
-    void generateStars();
 };
 
 

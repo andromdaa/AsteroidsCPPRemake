@@ -12,9 +12,14 @@ public:
     static BeginState* Instance(sf::RenderWindow &window, GameManager& gameManager);
     void transitionState(GameManager* g) override;
     void tickState() override;
-    void handleEvents();
+    void renderState() override;
 private:
+    void drawStars();
+    void generateStars();
+    void handleEvents();
+    int iteration = -1;
     BeginState(sf::RenderWindow &window, GameManager& gameManager);
+    const int MAX_STARS = 100;
 };
 
 

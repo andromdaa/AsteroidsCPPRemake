@@ -13,8 +13,9 @@ public:
     void transitionState(GameManager* g) override;
     void handleInput();
     void tickState() override;
+    void renderState() override;
     void handleEvents();
-    static sf::Vector2f getMovement(const sf::Shape& shape, float speed);
+    static sf::Vector2f getMovement(const sf::Shape& shape, float speed, double dt);
     static bool locationAllowed(float x, float y, sf::Vector2f movementInc, float radius);
     static int removeCollisions(ProjectileManager& projectileManagerL, AsteroidManager& asteroidManagerL);
 private:

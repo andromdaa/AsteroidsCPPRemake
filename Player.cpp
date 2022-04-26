@@ -11,8 +11,8 @@ Player::Player() :
     setOrigin(getRadius(), getRadius());
     setPosition(ActiveState::getWidth() / 2.f, ActiveState::getHeight() / 2.f);
 }
-void Player::updatePlayerPos() {
-    sf::Vector2f movement = ActiveState::getMovement(*this, speed);
+void Player::updatePlayerPos(double dt) {
+    sf::Vector2f movement = ActiveState::getMovement(*this, speed, dt);
     if(ActiveState::locationAllowed(getPosition().x, getPosition().y, movement, getRadius())) {
         move(movement.x, movement.y);
     } else speed = -speed;

@@ -16,19 +16,19 @@ public:
     GameManager(sf::ContextSettings &settings, bool enableAudio);
 
 //    void handleInput();
+    void update(double dt);
     void transitionState();
     void tickState();
-    void tick();
+    void renderState();
     sf::RenderWindow window;
     bool enableAudio;
+    const double dt = 0.01;
 private:
     GameState* state;
-    sf::Clock clock;
     friend class GameState;
     void changeState(GameState*);
     const static int WIDTH = 800;
     const static int HEIGHT = 600;
-    inline static float dt = 0;
 };
 
 

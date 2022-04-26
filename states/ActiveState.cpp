@@ -45,24 +45,24 @@ void ActiveState::handleInput() {
 
     if(Keyboard::isKeyPressed(sf::Keyboard::Up)) {
         player.speed += player.SPEED_INC;
-        player.updatePlayerPos();
+        player.updatePlayerPos(dt);
     }
 
     if(!Keyboard::isKeyPressed(sf::Keyboard::Up)) {
         if(player.speed > 0) player.speed -= .1f; //passively slow down the player, approach 0
         if(player.speed < 0) player.speed += 0.035; //if player is bounced off wall, passively approach 0 speed
-        player.updatePlayerPos();
+        player.updatePlayerPos(dt);
     } else {
         player.speed -= 0.03f; //actively slow player
-        player.updatePlayerPos();
+        player.updatePlayerPos(dt);
     }
 }
 
-sf::Vector2f ActiveState::getMovement(const sf::Shape &shape, float speed) {
+sf::Vector2f ActiveState::getMovement(const sf::Shape &shape, float speed, double dt) {
     float x = (float) (speed * sin(shape.getRotation() * (float) PI / 180) *
-            GameState::getDelta());
+            dt);
     float y = (float) (-speed * cos(shape.getRotation() * (float) PI / 180) *
-            GameState::getDelta());
+            dt);
 
     return {x, y};
 }
@@ -141,6 +141,9 @@ int ActiveState::checkIntersect(int nvert, const float *vertx, const float *vert
 void ActiveState::tickState() {
     handleEvents();
     handleInput();
+}
+
+void ActiveState::renderState() {
     window.draw(player);
     projectileManager.drawAll(window);
     asteroidManager.drawAll(window);
@@ -149,6 +152,8 @@ void ActiveState::tickState() {
 void ActiveState::transitionState(GameManager *g) {
     changeState(g, EndState::Instance(window, gameManager));
 }
+
+
 
 
 

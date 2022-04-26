@@ -1,18 +1,39 @@
+#include <iostream>
 #include "GameManager.h"
+
 int main() {
     sf::ContextSettings settings;
     settings.antialiasingLevel = 8;
     GameManager gameManger(settings, false);
 
-    gameManger.tick();
+    sf::Clock clock;
+    double t = 0.0;
+    const double dt = 0.01;
+
+    double currentTime = clock.getElapsedTime().asSeconds();
+    double accumulator = 0.0;
+
 
     while(gameManger.window.isOpen()) {
-        //handle all events / state triggers
-        gameManger.tick();
+        double newTime = clock.getElapsedTime().asSeconds();
+        double frameTime = newTime - currentTime;
+        currentTime = newTime;
 
+        accumulator += frameTime;
+
+        while( accumulator >= dt ) {
+            //game loop
+            gameManger.update(dt);
+            gameManger.tickState();
+
+            accumulator -= dt;
+            t += dt;
+        }
+
+        //handle all events / state triggers
         gameManger.window.clear();
 
-        gameManger.tickState();
+        gameManger.renderState();
 
         gameManger.window.display();
     }
@@ -22,6 +43,8 @@ int main() {
 
 /*
  * TODO:
+ * Fix rotation speed and movement speed due to fixed game loop implementation
+ * In order to fix sine wave jumpiness - use fixed game loop
  * Starry Background
  * Start screen - log player positions and asteroid positions to file and have BeginState emulate that
  * Add rocket tail when activated

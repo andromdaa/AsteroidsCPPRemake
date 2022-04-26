@@ -15,20 +15,21 @@ public:
     void startMusic();
     void playFireSound();
     void updateScore(int scoreInc, sf::RenderWindow& window);
-    void beginPlayingText(sf::RenderWindow &window);
+    bool beginPlayingText(sf::RenderWindow &window, double dt, int iteration);
     ResourceManager();
 private:
     friend class BeginState;
     friend class ActiveState;
     friend class EndState;
-    std::list<sf::Text> beginText;
+    std::vector<sf::Text> beginText;
+    std::vector<sf::Text> testing;
     sf::SoundBuffer buffer;
     sf::Sound sound;
     int scoreVal = 0;
     sf::Font font;
     sf::Text text;
     sf::Music music;
-    void bounceText(sf::RenderWindow &window);
+    void genText(float size);
 private:
     const sf::String characters[23] = {
             "P",
@@ -55,6 +56,7 @@ private:
             "n",
             "!",
     };
+
 };
 
 

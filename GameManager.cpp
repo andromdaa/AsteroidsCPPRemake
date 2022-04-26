@@ -24,17 +24,9 @@ GameManager::GameManager(sf::ContextSettings& settings, bool enableAudio)
     state = BeginState::Instance(window, *this);
 }
 
-void GameManager::tick() {
-    GameManager::dt = GameManager::clock.restart().asSeconds();
-}
-
 void GameManager::changeState(GameState* s) {
     state = s;
 }
-
-//void GameManager::handleInput() {
-//    state->tickState();
-//}
 
 void GameManager::transitionState() {
     state->transitionState(this);
@@ -42,4 +34,12 @@ void GameManager::transitionState() {
 
 void GameManager::tickState() {
     state->tickState();
+}
+
+void GameManager::renderState() {
+    state->renderState();
+}
+
+void GameManager::update(double dt) {
+    state->update(dt);
 }

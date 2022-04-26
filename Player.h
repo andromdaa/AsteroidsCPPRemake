@@ -12,7 +12,7 @@ class Player : public sf::CircleShape {
 public:
     explicit Player();
 private:
-    void updatePlayerPos();
+    void updatePlayerPos(double dt);
     friend class GameManager;
     friend class ActiveState;
     float rotationSpeed = 0;

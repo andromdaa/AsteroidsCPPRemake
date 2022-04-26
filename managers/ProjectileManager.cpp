@@ -8,7 +8,7 @@
 ProjectileManager::ProjectileManager(GameState& gameState) : gameState(gameState){}
 
 void ProjectileManager::draw(sf::RenderWindow& window, sf::CircleShape& projectile) {
-    sf::Vector2f speed = ActiveState::getMovement(projectile, PROJECTILE_SPEED);
+    sf::Vector2f speed = ActiveState::getMovement(projectile, PROJECTILE_SPEED, gameState.getDelta());
     if(ActiveState::locationAllowed(projectile.getPosition().x, projectile.getPosition().y, speed, projectile.getRadius())) {
         projectile.move(speed.x, speed.y);
         window.draw(projectile);
