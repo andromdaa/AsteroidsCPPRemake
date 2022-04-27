@@ -14,12 +14,40 @@ public:
     void tickState() override;
     void renderState() override;
 private:
+    std::vector<sf::Text> beginText;
     void drawStars();
     void generateStars();
     void handleEvents();
-    double iteration = -1.f;
     BeginState(sf::RenderWindow &window, GameManager& gameManager);
     const int MAX_STARS = 100;
+    void drawText(sf::Text& text, float offset);
+    void updateText();
+    void spawnText();
+
+
+private:
+    sf::String chars[20] = {
+            "P",
+            "r",
+            "e",
+            "s",
+            "a",
+            " ",
+            "a",
+            " ",
+            "k",
+            "e",
+            "y",
+            " ",
+            "t",
+            "o",
+            "",
+            "p",
+            "l",
+            "a",
+            "y",
+            "!",
+    };
 };
 
 

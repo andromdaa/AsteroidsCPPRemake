@@ -4,10 +4,6 @@
 
 #include "ResourceManager.h"
 #include <iostream>
-#include <fstream>
-#include <cmath>
-#include <fstream>
-#include "../util/Util.h"
 #include "../states/GameState.h"
 
 ResourceManager::ResourceManager() {
@@ -28,29 +24,6 @@ void ResourceManager::updateScore(int scoreInc, sf::RenderWindow& window) {
     scoreVal += scoreInc;
     text.setString("Score " + std::to_string(scoreVal));
     window.draw(text);
-}
-
-
-
-bool ResourceManager::beginPlayingText(sf::RenderWindow& window, double dt, double iteration) {
-    for(auto& render : beginText) {
-        render.move(0, (float) (iteration * dt));
-        window.draw(render);
-        if(render.getPosition().y <= 275) return true;
-        if(render.getPosition().y >= 325) return true;
-    }
-    return false;
-}
-
-void ResourceManager::genText(float size) {
-    for(int i = 0; i < 23; i++) {
-        text.setString(characters[i]);
-        text.setOrigin(text.getLocalBounds().width / 2, text.getLocalBounds().height / 2);
-        auto x = (float) (i * text.getCharacterSize());
-        x += 100.f + (float) text.getCharacterSize();
-        text.setPosition(x, size);
-        beginText.push_back(text);
-    }
 }
 
 void ResourceManager::startMusic() {

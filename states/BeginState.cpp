@@ -14,9 +14,9 @@ BeginState::BeginState(sf::RenderWindow &window, GameManager& gameManager) : Gam
     resourceManager.text.setCharacterSize(24);
     resourceManager.text.setOrigin(resourceManager.text.getLocalBounds().width / 2, resourceManager.text.getLocalBounds().height / 2 );
     resourceManager.text.setPosition((uint16_t) (window.getSize().x / 2), (uint16_t) (window.getSize().y / 2));
-    resourceManager.genText(window.getSize().y / 2);
     if(gameManager.enableAudio) resourceManager.startMusic();
     generateStars();
+    spawnText();
 }
 
 BeginState *BeginState::Instance(sf::RenderWindow &window, GameManager& gameManager) {
@@ -32,10 +32,9 @@ void BeginState::transitionState(GameManager *g) {
 }
 
 void BeginState::renderState() {
-    bool change = resourceManager.beginPlayingText(window, dt, iteration);
-    if(change) iteration *= -1;
     drawStars();
-    change = false;
+    spawnText();
+//    updateText();
 }
 
 void BeginState::tickState() {
@@ -52,6 +51,29 @@ void BeginState::handleEvents() {
 
     if(event.type == sf::Event::KeyPressed) {
         transitionState(&gameManager);
+    }
+}
+
+void BeginState::updateText() {
+    for(int i = 0; i <= beginText.size(); i++) {
+        auto offset = beginText[i % beginText.size()].getPosition().y - beginText[(i + 1) % beginText.size()].getPosition().y;
+        drawText(beginText[i % beginText.size()], offset);
+    }
+}
+
+void BeginState::drawText(sf::Text& text, float offset) {
+    text.move(0, offset * dt);
+    window.draw(text);
+}
+
+void BeginState::spawnText() {
+    for(auto & i : chars) {
+        sf::Text text;
+        text.setString(i);
+        text.setOrigin(text.getLocalBounds().width / 2, text.getLocalBounds().width / 2);
+        text.setPosition(window.getSize().x / 2, window.getSize().y / 2);
+//        beginText.push_back(text);
+        window.draw(text);
     }
 }
 

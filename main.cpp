@@ -1,4 +1,5 @@
 #include <iostream>
+#include <valarray>
 #include "GameManager.h"
 
 int main() {
@@ -13,15 +14,14 @@ int main() {
     double currentTime = clock.getElapsedTime().asSeconds();
     double accumulator = 0.0;
 
-
-    while(gameManger.window.isOpen()) {
+    while (gameManger.window.isOpen()) {
         double newTime = clock.getElapsedTime().asSeconds();
         double frameTime = newTime - currentTime;
         currentTime = newTime;
 
         accumulator += frameTime;
 
-        while( accumulator >= dt ) {
+        while (accumulator >= dt) {
             //game loop
             gameManger.update(dt);
             gameManger.tickState();
@@ -30,15 +30,17 @@ int main() {
             t += dt;
         }
 
+
+
         //handle all events / state triggers
         gameManger.window.clear();
 
         gameManger.renderState();
 
         gameManger.window.display();
+//    }
     }
-
-    return 0;
+        return 0;
 }
 
 /*
