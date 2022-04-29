@@ -55,10 +55,8 @@ int main() {
 /*
  * TODO:
  * Start screen - log player positions and asteroid positions to file and have BeginState emulate that
- * Add rocket tail when activated
  * Health System
  * Smooth asteroid movement/rotation (perlin noise?)
  * Break larger asteroids into smaller when destroyed
  * Progressive rotation speed
- * Fix when player presses space it sends a projectile and transitions state. Only transition state.
  */

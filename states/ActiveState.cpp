@@ -26,7 +26,6 @@ ActiveState *ActiveState::Instance(sf::RenderWindow& window, GameManager& gameMa
 }
 
 void ActiveState::handleInput() {
-
     if(player.leftRotationSpeed <= player.LOWER_ROTATION_BOUND) player.leftRotationSpeed = player.LOWER_ROTATION_BOUND;
     else if(player.rightRotationSpeed >= player.UPPER_ROTATION_BOUND) player.rightRotationSpeed = player.UPPER_ROTATION_BOUND;
 
@@ -131,6 +130,10 @@ void ActiveState::handleEvents() {
         }
 
         if(event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::Space) {
+            if(!isActive) {
+                isActive = true;
+                return;
+            }
             projectileManager.spawnProjectile(player);
             if(gameManager.enableAudio) resourceManager.playFireSound();
         }

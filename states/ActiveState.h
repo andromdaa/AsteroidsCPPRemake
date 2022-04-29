@@ -19,6 +19,7 @@ public:
     static bool locationAllowed(float x, float y, sf::Vector2f movementInc, float radius);
     static int removeCollisions(ProjectileManager& projectileManagerL, AsteroidManager& asteroidManagerL);
 private:
+    inline static bool isActive = false;
     explicit ActiveState(sf::RenderWindow &window, GameManager& gameManager);
     static int checkIntersect(int nvert, const float *vertx, const float *verty, float testx, float testy);
 };
