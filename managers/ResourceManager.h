@@ -20,7 +20,6 @@ private:
     friend class BeginState;
     friend class ActiveState;
     friend class EndState;
-    std::vector<sf::RectangleShape> beginText;
     sf::SoundBuffer buffer;
     sf::Sound sound;
     int scoreVal = 0;

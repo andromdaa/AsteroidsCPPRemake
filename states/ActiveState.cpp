@@ -27,20 +27,26 @@ ActiveState *ActiveState::Instance(sf::RenderWindow& window, GameManager& gameMa
 
 void ActiveState::handleInput() {
 
-    if(player.rotationSpeed >= player.UPPER_ROTATION_BOUND) player.rotationSpeed = player.UPPER_ROTATION_BOUND;
-    if(player.rotationSpeed <= player.LOWER_ROTATION_BOUND) player.rotationSpeed = player.LOWER_ROTATION_BOUND;
+    if(player.leftRotationSpeed <= player.LOWER_ROTATION_BOUND) player.leftRotationSpeed = player.LOWER_ROTATION_BOUND;
+    else if(player.rightRotationSpeed >= player.UPPER_ROTATION_BOUND) player.rightRotationSpeed = player.UPPER_ROTATION_BOUND;
 
     if (player.speed >= player.UPPER_SPEED_BOUND) player.speed = player.UPPER_SPEED_BOUND;
     if (player.speed <= player.LOWER_SPEED_BOUND) player.speed = player.LOWER_SPEED_BOUND;
 
     if(Keyboard::isKeyPressed(sf::Keyboard::Left)) {
-        player.rotationSpeed -= player.ROTATION_INC;
-        player.rotate(player.rotationSpeed);
+        player.leftRotationSpeed -= player.ROTATION_INC;
+        player.rotate(player.leftRotationSpeed);
+    } else if(player.leftRotationSpeed < 0) {
+        player.leftRotationSpeed += .25f;
+        player.rotate(player.leftRotationSpeed);
     }
 
     if(Keyboard::isKeyPressed(sf::Keyboard::Right)) {
-        player.rotationSpeed += player.ROTATION_INC;
-        player.rotate(player.rotationSpeed);
+        player.rightRotationSpeed += player.ROTATION_INC;
+        player.rotate(player.rightRotationSpeed);
+    } else if(player.rightRotationSpeed > 0) {
+        player.rightRotationSpeed -= .25f;
+        player.rotate(player.rightRotationSpeed);
     }
 
     if(Keyboard::isKeyPressed(sf::Keyboard::Up)) {
@@ -49,11 +55,11 @@ void ActiveState::handleInput() {
     }
 
     if(!Keyboard::isKeyPressed(sf::Keyboard::Up)) {
-        if(player.speed > 0) player.speed -= .1f; //passively slow down the player, approach 0
-        if(player.speed < 0) player.speed += 0.035; //if player is bounced off wall, passively approach 0 speed
+        if(player.speed > 0) player.speed -= 2.5f; //passively slow down the player, approach 0
+        if(player.speed < 0) player.speed += 1.f; //if player is bounced off wall, passively approach 0 speed
         player.updatePlayerPos(dt);
     } else {
-        player.speed -= 0.03f; //actively slow player
+        player.speed -= 0.50f; //actively slow player
         player.updatePlayerPos(dt);
     }
 }

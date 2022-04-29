@@ -1,5 +1,3 @@
-#include <iostream>
-#include <valarray>
 #include "GameManager.h"
 
 int main() {
@@ -17,6 +15,9 @@ int main() {
     while (gameManger.window.isOpen()) {
         double newTime = clock.getElapsedTime().asSeconds();
         double frameTime = newTime - currentTime;
+        if(frameTime > 0.25) {
+            frameTime = 0.25;
+        }
         currentTime = newTime;
 
         accumulator += frameTime;
@@ -26,11 +27,9 @@ int main() {
             gameManger.update(dt);
             gameManger.tickState();
 
-            accumulator -= dt;
             t += dt;
+            accumulator -= dt;
         }
-
-
 
         //handle all events / state triggers
         gameManger.window.clear();
@@ -42,12 +41,19 @@ int main() {
     }
         return 0;
 }
+//    std::ofstream sinValues;
+//    sinValues.open("sinValues.txt");
+//    for(int i = 0; i < 201; i++) {
+//        float rads = M_PI/180;
+//        double valOne = (100 * sin(1.8 * i * rads) + 300);
+//        double valTwo = (100 * sin(1.8 * (i + 1) * rads) + 300);
+//        double val = valOne - valTwo;
+//        sinValues << val << std::endl;
+//    }
+//    sinValues.close();
 
 /*
  * TODO:
- * Fix rotation speed and movement speed due to fixed game loop implementation
- * In order to fix sine wave jumpiness - use fixed game loop
- * Starry Background
  * Start screen - log player positions and asteroid positions to file and have BeginState emulate that
  * Add rocket tail when activated
  * Health System

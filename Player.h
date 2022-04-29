@@ -15,13 +15,14 @@ private:
     void updatePlayerPos(double dt);
     friend class GameManager;
     friend class ActiveState;
-    float rotationSpeed = 0;
-    const float UPPER_ROTATION_BOUND = .1f;
-    const float LOWER_ROTATION_BOUND = -.1f;
-    const float ROTATION_INC = 0.005f;
+    float leftRotationSpeed = 0;
+    float rightRotationSpeed = 0;
+    const float UPPER_ROTATION_BOUND = 5.f;
+    const float LOWER_ROTATION_BOUND = -5.f;
+    const float ROTATION_INC = .15f;
     const float LOWER_SPEED_BOUND = -100.f;
-    const float UPPER_SPEED_BOUND = 1000.f;
-    const float SPEED_INC = .25f;
+    const float UPPER_SPEED_BOUND = 250.f;
+    const float SPEED_INC = 5.f;
     float speed = 0.f;
 };
 

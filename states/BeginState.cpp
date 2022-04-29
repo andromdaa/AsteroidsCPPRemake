@@ -8,12 +8,13 @@
 #include <cmath>
 #include <random>
 #include <chrono>
+#include <iostream>
 
 BeginState::BeginState(sf::RenderWindow &window, GameManager& gameManager) : GameState(window, gameManager) {
-    resourceManager.text.setString("Press any key to begin!");
-    resourceManager.text.setCharacterSize(24);
-    resourceManager.text.setOrigin(resourceManager.text.getLocalBounds().width / 2, resourceManager.text.getLocalBounds().height / 2 );
-    resourceManager.text.setPosition((uint16_t) (window.getSize().x / 2), (uint16_t) (window.getSize().y / 2));
+//    resourceManager.text.setString("Press any key to begin!");
+//    resourceManager.text.setCharacterSize(24);
+//    resourceManager.text.setOrigin(resourceManager.text.getLocalBounds().width / 2, resourceManager.text.getLocalBounds().height / 2 );
+//    resourceManager.text.setPosition((uint16_t) (window.getSize().x / 2), (uint16_t) (window.getSize().y / 2));
     if(gameManager.enableAudio) resourceManager.startMusic();
     generateStars();
     spawnText();
@@ -33,12 +34,13 @@ void BeginState::transitionState(GameManager *g) {
 
 void BeginState::renderState() {
     drawStars();
-    spawnText();
-//    updateText();
+    drawText();
 }
 
 void BeginState::tickState() {
     handleEvents();
+    updateText();
+
 }
 
 void BeginState::handleEvents() {
@@ -55,25 +57,29 @@ void BeginState::handleEvents() {
 }
 
 void BeginState::updateText() {
-    for(int i = 0; i <= beginText.size(); i++) {
-        auto offset = beginText[i % beginText.size()].getPosition().y - beginText[(i + 1) % beginText.size()].getPosition().y;
-        drawText(beginText[i % beginText.size()], offset);
+    for(int i = 0; i < beginText.size(); i++) {
+        auto& text = beginText[i];
+        text.move(0, sineValues[(i + iteration) % sineValues.size()]);
+    }
+    iteration++;
+}
+
+void BeginState::drawText() {
+    for(auto& text : beginText) {
+        window.draw(text);
     }
 }
 
-void BeginState::drawText(sf::Text& text, float offset) {
-    text.move(0, offset * dt);
-    window.draw(text);
-}
-
 void BeginState::spawnText() {
-    for(auto & i : chars) {
+    for(int i = 0; i < 20; i++) {
         sf::Text text;
-        text.setString(i);
-        text.setOrigin(text.getLocalBounds().width / 2, text.getLocalBounds().width / 2);
-        text.setPosition(window.getSize().x / 2, window.getSize().y / 2);
-//        beginText.push_back(text);
-        window.draw(text);
+        text.setFont(resourceManager.font);
+        text.setString(chars[i]);
+        text.setOrigin(static_cast<int>(text.getLocalBounds().width / 2.f), static_cast<int>(text.getLocalBounds().width / 2));
+        int xSize = static_cast<int>(std::floor(100.f + (text.getCharacterSize() * i)));
+        int ySize = static_cast<int>(std::floor(window.getSize().y / 2.f));
+        text.setPosition(xSize, ySize);
+        beginText.push_back(text);
     }
 }
 

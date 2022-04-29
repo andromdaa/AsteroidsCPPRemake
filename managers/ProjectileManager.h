@@ -20,7 +20,7 @@ public:
 private:
     friend class ActiveState;
     GameState& gameState;
-    constexpr static float PROJECTILE_SPEED = 600.f;
+    constexpr static float PROJECTILE_SPEED = 10.f;
     std::list<sf::CircleShape> projectiles;
 };
 
