@@ -62,6 +62,8 @@ void ActiveState::handleInput() {
         player.speed -= 0.50f; //actively slow player
         player.updatePlayerPos(dt);
     }
+
+    particleSystem.setEmitter(player.getPosition());
 }
 
 sf::Vector2f ActiveState::getMovement(const sf::Shape &shape, float speed, double dt) {
@@ -147,9 +149,11 @@ int ActiveState::checkIntersect(int nvert, const float *vertx, const float *vert
 void ActiveState::tickState() {
     handleEvents();
     handleInput();
+    GameState::tickState();
 }
 
 void ActiveState::renderState() {
+    GameState::renderState();
     window.draw(player);
     projectileManager.drawAll(window);
     asteroidManager.drawAll(window);

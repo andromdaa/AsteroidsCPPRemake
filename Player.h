@@ -11,6 +11,7 @@ class ActiveState;
 class Player : public sf::CircleShape {
 public:
     explicit Player();
+    float getSpeed();
 private:
     void updatePlayerPos(double dt);
     friend class GameManager;

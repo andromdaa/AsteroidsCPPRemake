@@ -18,3 +18,6 @@ void Player::updatePlayerPos(double dt) {
     } else speed = -speed;
 }
 
+float Player::getSpeed() {
+    return speed;
+}

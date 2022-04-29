@@ -9,12 +9,12 @@
 #include "../managers/AsteroidManager.h"
 #include "../managers/ProjectileManager.h"
 #include "../managers/ResourceManager.h"
+#include "../CustomSFMLShapes/ParticleSystem.h"
 
 class ActiveState;
 class BeginState;
 class EndState;
 class GameManager;
-
 class GameState {
 public:
     virtual void transitionState(GameManager* g);
@@ -35,11 +35,14 @@ protected:
     ProjectileManager projectileManager;
     AsteroidManager asteroidManager;
     ResourceManager resourceManager;
+    ParticleSystem particleSystem;
     constexpr static float PI = 3.14159265f;
     GameState(sf::RenderWindow& window, GameManager& gameManager);
     void changeState(GameManager*, GameState*);
     std::list<sf::CircleShape> stars;
+    sf::Clock clock;
 private:
+    friend class ParticleSystem;
 };
 
 

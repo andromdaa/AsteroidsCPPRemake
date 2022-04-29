@@ -8,16 +8,12 @@
 #include <cmath>
 #include <random>
 #include <chrono>
-#include <iostream>
 
 BeginState::BeginState(sf::RenderWindow &window, GameManager& gameManager) : GameState(window, gameManager) {
-//    resourceManager.text.setString("Press any key to begin!");
-//    resourceManager.text.setCharacterSize(24);
-//    resourceManager.text.setOrigin(resourceManager.text.getLocalBounds().width / 2, resourceManager.text.getLocalBounds().height / 2 );
-//    resourceManager.text.setPosition((uint16_t) (window.getSize().x / 2), (uint16_t) (window.getSize().y / 2));
     if(gameManager.enableAudio) resourceManager.startMusic();
     generateStars();
     spawnText();
+
 }
 
 BeginState *BeginState::Instance(sf::RenderWindow &window, GameManager& gameManager) {
@@ -33,6 +29,7 @@ void BeginState::transitionState(GameManager *g) {
 }
 
 void BeginState::renderState() {
+    GameState::renderState();
     drawStars();
     drawText();
 }
@@ -40,7 +37,7 @@ void BeginState::renderState() {
 void BeginState::tickState() {
     handleEvents();
     updateText();
-
+    GameState::tickState();
 }
 
 void BeginState::handleEvents() {

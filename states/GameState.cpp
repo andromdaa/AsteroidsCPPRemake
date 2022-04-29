@@ -14,9 +14,9 @@ window(window),
 player(),
 resourceManager(),
 projectileManager(*this),
-asteroidManager(*this)
-{
-}
+asteroidManager(*this),
+particleSystem(500, *this)
+{}
 
 void GameState::changeState(GameManager* m, GameState* s) {
     m->changeState(s);
@@ -36,9 +36,16 @@ int GameState::getHeight() {
 
 void GameState::transitionState(GameManager *g) {}
 
-void GameState::tickState() {}
+void GameState::tickState() {
+//    sf::Vector2i mouse = sf::Mouse::getPosition(window);
+//    particleSystem.setEmitter(window.mapPixelToCoords(mouse));
+    sf::Time elapsed = clock.restart();
+    particleSystem.update(elapsed);
+}
 
-void GameState::renderState() {}
+void GameState::renderState() {
+    window.draw(particleSystem);
+}
 
 ResourceManager& GameState::getResourceManager() {
     return GameState::resourceManager;
