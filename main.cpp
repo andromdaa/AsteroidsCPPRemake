@@ -1,4 +1,9 @@
+#include <iostream>
 #include "GameManager.h"
+
+#include "util/Util.h"
+
+
 
 int main() {
     sf::ContextSettings settings;
@@ -54,6 +59,7 @@ int main() {
 
 /*
  * TODO:
+ * Should be able to access window from GameState in all state classes
  * Start screen - log player positions and asteroid positions to file and have BeginState emulate that
  * Health System
  * Smooth asteroid movement/rotation (perlin noise?)

@@ -27,6 +27,7 @@ public:
     AsteroidManager& getAsteroidManager();
     ResourceManager &getResourceManager();
     double getDelta() const;
+    inline static int score = 0;
 protected:
     double dt = 0;
     GameManager& gameManager;
@@ -36,13 +37,15 @@ protected:
     AsteroidManager asteroidManager;
     ResourceManager resourceManager;
     ParticleSystem particleSystem;
+    std::list<sf::CircleShape> stars;
+    sf::Clock clock;
     constexpr static float PI = 3.14159265f;
     GameState(sf::RenderWindow& window, GameManager& gameManager);
     void changeState(GameManager*, GameState*);
-    std::list<sf::CircleShape> stars;
-    sf::Clock clock;
+    void handleWindowEvents();
 private:
     friend class ParticleSystem;
+
 };
 
 

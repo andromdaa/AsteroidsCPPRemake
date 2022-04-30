@@ -15,7 +15,7 @@ public:
     void drawAll(sf::RenderWindow& window);
     void createAsteroids();
 private:
-    friend class ActiveState;
+    friend class Util;
     GameState& gameState;
     enum Sizes { SM, MED, LRG };
     const int MAX_ASTEROIDS = 10;

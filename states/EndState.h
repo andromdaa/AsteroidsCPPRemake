@@ -11,6 +11,15 @@ class EndState : public GameState {
 public:
     explicit EndState(sf::RenderWindow& window, GameManager& gameManager);
     static EndState* Instance(sf::RenderWindow& window, GameManager& gameManager);
+private:
+    sf::Text gameOverText;
+    sf::Text finalScoreText;
+
+    void tickState();
+
+    void update(double dt);
+
+    void renderState();
 };
 
 #endif //ASTEROIDSSFML_ENDSTATE_H

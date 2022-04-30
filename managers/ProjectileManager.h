@@ -18,9 +18,9 @@ public:
     void spawnProjectile(Player& player);
     std::list<sf::CircleShape>& getProjectiles();
 private:
-    friend class ActiveState;
+    friend class Util;
     GameState& gameState;
-    constexpr static float PROJECTILE_SPEED = 10.f;
+    constexpr static float PROJECTILE_SPEED = 40.f;
     std::list<sf::CircleShape> projectiles;
 };
 

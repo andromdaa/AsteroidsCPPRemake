@@ -8,12 +8,12 @@
 #include <cmath>
 #include <random>
 #include <chrono>
+#include "../util/Util.h"
 
 BeginState::BeginState(sf::RenderWindow &window, GameManager& gameManager) : GameState(window, gameManager) {
     if(gameManager.enableAudio) resourceManager.startMusic();
     generateStars();
     spawnText();
-
 }
 
 BeginState *BeginState::Instance(sf::RenderWindow &window, GameManager& gameManager) {

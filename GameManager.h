@@ -7,6 +7,8 @@
 
 #include <SFML/Window/ContextSettings.hpp>
 #include <SFML/Graphics.hpp>
+#include "Player.h"
+
 
 class GameState;
 class GameManager {

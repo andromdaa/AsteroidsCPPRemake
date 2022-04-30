@@ -15,6 +15,7 @@ public:
     void startMusic();
     void playFireSound();
     void updateScore(int scoreInc, sf::RenderWindow& window);
+    void playGameOver();
     ResourceManager();
 private:
     friend class BeginState;
@@ -22,11 +23,11 @@ private:
     friend class EndState;
     sf::SoundBuffer buffer;
     sf::Sound sound;
-    int scoreVal = 0;
     sf::Font font;
     sf::Text text;
     sf::Music music;
-private:
+    sf::SoundBuffer gameOverBuffer;
+    sf::Sound gameOver;
 };
 
 

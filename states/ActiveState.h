@@ -17,7 +17,6 @@ public:
     void handleEvents();
     static sf::Vector2f getMovement(const sf::Shape& shape, float speed, double dt);
     static bool locationAllowed(float x, float y, sf::Vector2f movementInc, float radius);
-    static int removeCollisions(ProjectileManager& projectileManagerL, AsteroidManager& asteroidManagerL);
 private:
     inline static bool isActive = false;
     explicit ActiveState(sf::RenderWindow &window, GameManager& gameManager);

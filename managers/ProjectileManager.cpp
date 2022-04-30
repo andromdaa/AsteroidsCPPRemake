@@ -4,6 +4,7 @@
 
 #include "ProjectileManager.h"
 #include "../states/ActiveState.h"
+#include "../util/Util.h"
 
 ProjectileManager::ProjectileManager(GameState& gameState) : gameState(gameState){}
 
@@ -23,7 +24,7 @@ void ProjectileManager::spawnProjectile(Player& player) {
 }
 
 void ProjectileManager::drawAll(sf::RenderWindow& window) {
-    int scoreInc = ActiveState::removeCollisions(gameState.getProjectileManager(), gameState.getAsteroidManager());
+    int scoreInc = Util::removeCollisions(gameState.getProjectileManager(), gameState.getAsteroidManager());
     gameState.getResourceManager().updateScore(scoreInc, window);
     for(sf::CircleShape& projectile : projectiles) {
         draw(window, projectile);
