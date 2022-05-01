@@ -3,7 +3,6 @@
 //
 
 #include "GameManager.h"
-
 #include <utility>
 #include "states/BeginState.h"
 #include "states/ActiveState.h"
@@ -12,7 +11,8 @@
 GameManager::GameManager(sf::ContextSettings& settings)
         :
         window(sf::VideoMode(GameManager::WIDTH, GameManager::HEIGHT), "Asteroids",
-               sf::Style::Default, settings)
+               sf::Style::Default, settings),
+               enableAudio(false)
         {
     state = BeginState::Instance(window, *this);
 }

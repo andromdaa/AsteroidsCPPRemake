@@ -1,15 +1,9 @@
 #include <iostream>
+#include <SFML/System/Clock.hpp>
+#include "util/Util.h"
 #include "GameManager.h"
 
-#include "util/Util.h"
-
-
-
 int main() {
-    sf::ContextSettings settings;
-    settings.antialiasingLevel = 8;
-    GameManager gameManger(settings, false);
-
     sf::Clock clock;
     double t = 0.0;
     const double dt = 0.01;
@@ -17,7 +11,7 @@ int main() {
     double currentTime = clock.getElapsedTime().asSeconds();
     double accumulator = 0.0;
 
-    while (gameManger.window.isOpen()) {
+    while (Util::gameInstance()->window.isOpen()) {
         double newTime = clock.getElapsedTime().asSeconds();
         double frameTime = newTime - currentTime;
         if(frameTime > 0.25) {
@@ -29,20 +23,19 @@ int main() {
 
         while (accumulator >= dt) {
             //game loop
-            gameManger.update(dt);
-            gameManger.tickState();
+            Util::gameInstance()->update(dt);
+            Util::gameInstance()->tickState();
 
             t += dt;
             accumulator -= dt;
         }
 
         //handle all events / state triggers
-        gameManger.window.clear();
+        Util::gameInstance()->window.clear();
 
-        gameManger.renderState();
+        Util::gameInstance()->renderState();
 
-        gameManger.window.display();
-//    }
+        Util::gameInstance()->window.display();
     }
         return 0;
 }

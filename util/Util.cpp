@@ -2,11 +2,14 @@
 // Created by Cole on 4/25/2022.
 //
 
-#include <cmath>
+#include <SFML/Graphics.hpp>
 #include <iostream>
 #include "Util.h"
 #include "../managers/ProjectileManager.h"
 #include "../managers/AsteroidManager.h"
+#include "../GameManager.h"
+#include "../Player.h"
+
 
 int Util::removeCollisions(ProjectileManager& projectileManagerL, AsteroidManager& asteroidManagerL) {
     int scoreInc = 0;
@@ -96,6 +99,27 @@ bool Util::checkPlayerCollision(Player& player, AsteroidManager& asteroidManager
         }
     }
     return false;
+}
+
+std::shared_ptr<GameManager> Util::createGameManager() {
+    sf::ContextSettings settings;
+    settings.antialiasingLevel = 8;
+    auto p = new GameManager(settings);
+    return std::unique_ptr<GameManager>(p);
+}
+
+std::shared_ptr<GameManager> Util::resetGame() {
+    gameInstance().reset();
+    return createGameManager();
+}
+
+std::shared_ptr<GameManager> Util::gameInstance() {
+    static std::shared_ptr<GameManager> self;
+    if(self == nullptr) {
+        auto p = createGameManager();
+        self = std::shared_ptr<GameManager>(p);
+    }
+    return self;
 }
 
 

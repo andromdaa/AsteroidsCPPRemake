@@ -3,6 +3,7 @@
 //
 
 #include "EndState.h"
+#include "../util/Util.h"
 
 std::shared_ptr<EndState> EndState::Instance(sf::RenderWindow& window, GameManager& gameManager) {
     static std::shared_ptr<EndState> self;
@@ -32,6 +33,10 @@ void EndState::tickState() {
 
     if (event.key.code == sf::Keyboard::Escape) {
         window.close();
+    }
+
+    if(event.key.code == sf::Keyboard::Space) {
+        Util::resetGame();
     }
 
 //    auto elapsedTime = -clock.getElapsedTime().asSeconds();

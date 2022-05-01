@@ -7,8 +7,6 @@
 
 #include <SFML/Window/ContextSettings.hpp>
 #include <SFML/Graphics.hpp>
-#include "Player.h"
-
 
 class GameState;
 class GameManager {
@@ -20,7 +18,7 @@ public:
     void tickState();
     void renderState();
     sf::RenderWindow window;
-    bool enableAudio;
+    bool enableAudio{};
     const double dt = 0.01;
 private:
     std::shared_ptr<GameState> state;
