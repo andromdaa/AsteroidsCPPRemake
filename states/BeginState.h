@@ -9,7 +9,7 @@
 
 class BeginState : public GameState {
 public:
-    static BeginState* Instance(sf::RenderWindow &window, GameManager& gameManager);
+    static std::shared_ptr<BeginState> Instance(sf::RenderWindow &window, GameManager& gameManager);
     void transitionState(GameManager* g) override;
     void tickState() override;
     void renderState() override;

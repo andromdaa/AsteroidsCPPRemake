@@ -41,7 +41,7 @@ protected:
     sf::Clock clock;
     constexpr static float PI = 3.14159265f;
     GameState(sf::RenderWindow& window, GameManager& gameManager);
-    void changeState(GameManager*, GameState*);
+    void changeState(GameManager*, std::shared_ptr<GameState>);
     void handleWindowEvents();
 private:
     friend class ParticleSystem;

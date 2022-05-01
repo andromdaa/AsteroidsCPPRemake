@@ -17,10 +17,11 @@ ActiveState::ActiveState(sf::RenderWindow &window, GameManager &gameManager) :
     asteroidManager.createAsteroids();
 }
 
-ActiveState *ActiveState::Instance(sf::RenderWindow &window, GameManager &gameManager) {
-    static ActiveState *self;
-    if (self == nullptr) {
-        self = new ActiveState(window, gameManager);
+std::shared_ptr<ActiveState> ActiveState::Instance(sf::RenderWindow &window, GameManager &gameManager) {
+    static std::shared_ptr<ActiveState> self;
+    if(self == nullptr) {
+        auto p = new ActiveState(window, gameManager);
+        self = std::shared_ptr<ActiveState>(p);
     }
     return self;
 }

@@ -4,10 +4,11 @@
 
 #include "EndState.h"
 
-EndState *EndState::Instance(sf::RenderWindow& window, GameManager& gameManager) {
-    static EndState* self;
+std::shared_ptr<EndState> EndState::Instance(sf::RenderWindow& window, GameManager& gameManager) {
+    static std::shared_ptr<EndState> self;
     if(self == nullptr) {
-        self = new EndState(window, gameManager);
+        auto p = new EndState(window, gameManager);
+        self = std::shared_ptr<EndState>(p);
     }
     return self;
 }

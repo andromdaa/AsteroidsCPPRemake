@@ -14,10 +14,7 @@ class GameState;
 class GameManager {
 public:
     explicit GameManager(sf::ContextSettings& settings);
-
     GameManager(sf::ContextSettings &settings, bool enableAudio);
-
-//    void handleInput();
     void update(double dt);
     void transitionState();
     void tickState();
@@ -26,9 +23,9 @@ public:
     bool enableAudio;
     const double dt = 0.01;
 private:
-    GameState* state;
+    std::shared_ptr<GameState> state;
     friend class GameState;
-    void changeState(GameState*);
+    void changeState(std::shared_ptr<GameState> s);
     const static int WIDTH = 800;
     const static int HEIGHT = 600;
 };

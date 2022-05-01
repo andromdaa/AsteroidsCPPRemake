@@ -3,6 +3,8 @@
 //
 
 #include "GameState.h"
+
+#include <utility>
 #include "../GameManager.h"
 #include "BeginState.h"
 #include "ActiveState.h"
@@ -21,8 +23,8 @@ particleSystem(500, *this)
 void GameState::handleWindowEvents() {}
 
 
-void GameState::changeState(GameManager* m, GameState* s) {
-    m->changeState(s);
+void GameState::changeState(GameManager* m, std::shared_ptr<GameState> s) {
+    m->changeState(std::move(s));
 }
 
 double GameState::getDelta() const {

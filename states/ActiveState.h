@@ -9,7 +9,7 @@
 
 class ActiveState : public GameState {
 public:
-    static ActiveState* Instance(sf::RenderWindow& window, GameManager& gameManager);
+    static std::shared_ptr<ActiveState> Instance(sf::RenderWindow& window, GameManager& gameManager);
     void transitionState(GameManager* g) override;
     void handleInput();
     void tickState() override;
@@ -20,7 +20,6 @@ public:
 private:
     inline static bool isActive = false;
     explicit ActiveState(sf::RenderWindow &window, GameManager& gameManager);
-    static int checkIntersect(int nvert, const float *vertx, const float *verty, float testx, float testy);
 };
 
 

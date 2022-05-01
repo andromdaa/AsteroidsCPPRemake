@@ -3,6 +3,8 @@
 //
 
 #include "GameManager.h"
+
+#include <utility>
 #include "states/BeginState.h"
 #include "states/ActiveState.h"
 #include "states/EndState.h"
@@ -24,8 +26,8 @@ GameManager::GameManager(sf::ContextSettings& settings, bool enableAudio)
     state = BeginState::Instance(window, *this);
 }
 
-void GameManager::changeState(GameState* s) {
-    state = s;
+void GameManager::changeState(std::shared_ptr<GameState> s) {
+    state = std::move(s);
 }
 
 void GameManager::transitionState() {

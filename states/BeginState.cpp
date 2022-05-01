@@ -16,10 +16,11 @@ BeginState::BeginState(sf::RenderWindow &window, GameManager& gameManager) : Gam
     spawnText();
 }
 
-BeginState *BeginState::Instance(sf::RenderWindow &window, GameManager& gameManager) {
-    static BeginState* self;
+std::shared_ptr<BeginState> BeginState::Instance(sf::RenderWindow &window, GameManager& gameManager) {
+    static std::shared_ptr<BeginState> self;
     if(self == nullptr) {
-        self = new BeginState(window, gameManager);
+        auto p = new BeginState(window, gameManager);
+        self = std::shared_ptr<BeginState>(p);
     }
     return self;
 }
