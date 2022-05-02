@@ -101,7 +101,7 @@ bool Util::checkPlayerCollision(Player& player, AsteroidManager& asteroidManager
 std::shared_ptr<GameManager> Util::createGameManager() {
     sf::ContextSettings settings;
     settings.antialiasingLevel = 8;
-    auto p = new GameManager(settings);
+    auto p = new GameManager(settings, true);
     return std::unique_ptr<GameManager>(p);
 }
 
@@ -114,8 +114,8 @@ std::shared_ptr<GameManager> Util::createGameManager() {
 
 void Util::resetGame() {
     std::shared_ptr<GameManager> instance = gameInstance();
-    ActiveState::Instance(*instance->window, *instance)->reset();
-    instance->state = ActiveState::Instance(*instance->window, *instance);
+    ActiveState::Instance(instance->getWindow(), *instance)->reset();
+    instance->state = ActiveState::Instance(instance->getWindow(), *instance);
 }
 
 std::shared_ptr<GameManager> Util::gameInstance() {

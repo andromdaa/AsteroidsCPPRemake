@@ -24,7 +24,7 @@ EndState::EndState(sf::RenderWindow& window, GameManager& gameManager) :
     finalScoreText.setPosition(gameOverText.getPosition());
     finalScoreText.move(0, 20);
     gameManager.getResourceManager().playGameOver();
-    gameManager.clock.restart(); //why are we doing this
+    gameManager.getClock().restart(); //why are we doing this
 }
 
 void EndState::tickState() {

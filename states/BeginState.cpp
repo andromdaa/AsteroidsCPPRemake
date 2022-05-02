@@ -12,7 +12,7 @@
 
 BeginState::BeginState(sf::RenderWindow &window, GameManager &gameManager) : GameState(window, gameManager),
                                                                              window(window) {
-    if (gameManager.enableAudio) gameManager.getResourceManager().startMusic();
+    if (gameManager.getEnableAudio()) gameManager.getResourceManager().startMusic();
     generateStars();
     spawnText();
 }

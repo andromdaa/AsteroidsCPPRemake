@@ -1,65 +1,53 @@
 //
-// Created by Cole on 4/29/2022.
+// Created by Cole on 5/2/2022.
 //
 
+#include <iostream>
 #include "ParticleSystem.h"
 #include "../states/ActiveState.h"
+#include "../Player.h"
 #include "../GameManager.h"
 
-ParticleSystem::ParticleSystem(unsigned int count, GameManager& gameManager) :
-        gameManager(gameManager),
-        m_particles(count),
-        m_vertices(sf::Points, count),
-        m_lifetime(sf::seconds(3.f)),
-        m_emitter(0.f, 0.f)
-        {}
+ParticleSystem::ParticleSystem(int count, GameManager& gameManager) :
+gameManager(gameManager),
+particles(count),
+allowedLifetime(sf::seconds(1.f))
+{
+    spawnParticles();
+}
 
-void ParticleSystem::setEmitter(sf::Vector2f position) {
-    m_emitter = position;
+void ParticleSystem::spawnParticles() {
+    for(int i = 0; i < particles.size(); i++) {
+        particles[i].shape = sf::CircleShape(rand() % 4);
+        particles[i].shape.setOrigin(particles[i].shape.getRadius(), particles[i].shape.getRadius());
+        particles[i].shape.setPosition(gameManager.getPlayer().getTransform().transformPoint(gameManager.getPlayer().getPoint(2)));
+        particles[i].lifetime = sf::seconds(1.f);
+    }
 }
 
 void ParticleSystem::update(sf::Time elapsed) {
-    for(std::size_t i = 0; i < m_particles.size(); ++i) {
-        Particle& p = m_particles[i];
-        p.lifetime -= elapsed;
+    //check elasped time to see if particles' lifetime is over
+    for(int i = 0; i < particles.size(); i++) {
+        auto& particle = particles[i];
+        particle.lifetime -= elapsed;
 
-        if(p.lifetime <= sf::Time::Zero) {
-            resetParticle(i);
+        if(particle.lifetime <= sf::Time::Zero) {
+            resetParticle();
         }
 
-        m_vertices[i].position += p.velocity * elapsed.asSeconds();
 
-        float ratio = p.lifetime.asSeconds() / m_lifetime.asSeconds();
-        m_vertices[i].color.a = static_cast<sf::Uint8>(ratio * 255);
-        m_vertices[i].color = sf::Color::Yellow;
+        float ratio = particle.lifetime.asSeconds() / allowedLifetime.asSeconds();
+        sf::Color color(255, 255, 0, static_cast<sf::Uint8>(ratio * 255));
+        particle.shape.setFillColor(color);
     }
 }
 
-void ParticleSystem::draw(sf::RenderTarget &target, sf::RenderStates states) const {
-    states.transform *= getTransform();
-
-    states.texture = nullptr;
-
-    target.draw(m_vertices, states);
-}
-
-void ParticleSystem::resetParticle(std::size_t index) {
-    Player& player = gameManager.getPlayer();
-    // give a random velocity and lifetime to the particle
-    float angle = player.getRotation();
-    float speed = player.getSpeed();
-    m_particles[index].velocity = ActiveState::getMovement(player, speed, gameManager.getDelta());
-
-//    m_particles[index].velocity = sf::Vector2f(std::cos(angle) * speed, std::sin(angle) * speed);
-
-    m_particles[index].lifetime = sf::milliseconds((std::rand() % 2000));
-
-    // reset the position of the corresponding vertex
-    m_vertices[index].position = m_emitter;
-}
-
-void ParticleSystem::reset() {
-    for(int i = 0; i < m_particles.size(); i++) {
-        resetParticle(i);
+void ParticleSystem::drawAll() {
+    for(auto& particle : particles) {
+        gameManager.getWindow().draw(particle.shape);
     }
+}
+
+void ParticleSystem::resetParticle() {
+//    std::cout << "Reset!" << std::endl;
 }

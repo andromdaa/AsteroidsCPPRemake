@@ -5,6 +5,7 @@
 #include "ActiveState.h"
 #include "EndState.h"
 #include "../util/Util.h"
+#include <cmath>
 
 using namespace sf;
 
@@ -66,7 +67,7 @@ void ActiveState::handleInput() {
         player.updatePlayerPos(gameManager.getDelta());
     }
 
-    gameManager.getParticleSystem().setEmitter(player.getPosition());
+//    gameManager.getParticleSystem().setEmitter(player.getPosition());
 }
 
 sf::Vector2f ActiveState::getMovement(const sf::Shape &shape, float speed, double dt) {
@@ -109,7 +110,7 @@ void ActiveState::handleEvents() {
             return;
         }
         gameManager.getProjectileManager().spawnProjectile(player);
-        if (gameManager.enableAudio) gameManager.getResourceManager().playFireSound();
+        if (gameManager.getEnableAudio()) gameManager.getResourceManager().playFireSound();
     }
 }
 
@@ -120,7 +121,7 @@ void ActiveState::tickState() {
 }
 
 void ActiveState::renderState() {
-    window.draw(gameManager.getParticleSystem());
+    gameManager.getParticleSystem().drawAll();
     player.drawPlayerElements(window);
     projectileManager.drawAll(window);
     asteroidManager.drawAll(window);
@@ -133,7 +134,7 @@ void ActiveState::transitionState(GameManager *g) {
 
 void ActiveState::reset() {
     player.reset();
-    gameManager.getParticleSystem().reset();
+//    gameManager.getParticleSystem().reset();
     window.clear();
     projectileManager.reset();
     asteroidManager.reset();

@@ -10,7 +10,7 @@ ResourceManager::ResourceManager() {
     if (!music.openFromFile("assets/sounds/music.wav")) std::cout << "Music Error" << std::endl;
     music.setVolume(50.f);
 
-    if (!buffer.loadFromFile("assets/sounds/fire.ogg")) std::cout << "Sound Error" << std::endl;
+    if (!buffer.loadFromFile("assets/sounds/lazer_hit.wav")) std::cout << "Sound Error" << std::endl;
     sound.setBuffer(buffer);
     sound.setVolume(50.f);
 
@@ -18,9 +18,9 @@ ResourceManager::ResourceManager() {
     text.setFont(font);
     text.setFillColor(sf::Color::White);
 
-    if(!gameOverBuffer.loadFromFile("assets/sounds/gameover.ogg")) std::cout << "Game Over Sound Error" << std::endl;
-    gameOver.setBuffer(gameOverBuffer);
-    gameOver.setVolume(50.f);
+//    if(!gameOverBuffer.loadFromFile("assets/sounds/gameover.ogg")) std::cout << "Game Over Sound Error" << std::endl;
+//    gameOver.setBuffer(gameOverBuffer);
+//    gameOver.setVolume(50.f);
 
 }
 

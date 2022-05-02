@@ -1,34 +1,34 @@
 //
-// Created by Cole on 4/29/2022.
+// Created by Cole on 5/2/2022.
 //
 
 #ifndef ASTEROIDSSFML_PARTICLESYSTEM_H
 #define ASTEROIDSSFML_PARTICLESYSTEM_H
 
+#include <vector>
 #include <SFML/Graphics.hpp>
-#include <cmath>
-class GameManager;
 
-class ParticleSystem : public sf::Drawable, public sf::Transformable {
+class GameManager;
+class ParticleSystem {
 public:
-    ParticleSystem(unsigned int count, GameManager& gameManager);
-    void setEmitter(sf::Vector2f position);
+    ParticleSystem(int count, GameManager& gameManager);
+    GameManager& gameManager;
+    void spawnParticles();
+
     void update(sf::Time elapsed);
-    void reset();
-private:
-    void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
+
+    void drawAll();
+
 private:
     struct Particle {
-        sf::Vector2f velocity;
+        sf::CircleShape shape;
         sf::Time lifetime;
     };
+    std::vector<Particle> particles;
+    sf::Time allowedLifetime;
 
-    void resetParticle(std::size_t index);
-    GameManager& gameManager;
-    std::vector<Particle> m_particles;
-    sf::VertexArray m_vertices;
-    sf::Time m_lifetime;
-    sf::Vector2f m_emitter;
+    void resetParticle();
+
 };
 
 

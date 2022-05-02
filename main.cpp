@@ -1,7 +1,6 @@
 #include <iostream>
 #include <SFML/System/Clock.hpp>
 #include "util/Util.h"
-#include "GameManager.h"
 
 int main() {
     sf::Clock clock;
@@ -11,7 +10,7 @@ int main() {
     double currentTime = clock.getElapsedTime().asSeconds();
     double accumulator = 0.0;
 
-    while (Util::gameInstance()->window->isOpen()) {
+    while (Util::gameInstance()->getWindow().isOpen()) {
         double newTime = clock.getElapsedTime().asSeconds();
         double frameTime = newTime - currentTime;
         if(frameTime > 0.25) {
@@ -31,11 +30,11 @@ int main() {
         }
 
         //handle all events / state triggers
-        Util::gameInstance()->window->clear();
+        Util::gameInstance()->getWindow().clear();
 
         Util::gameInstance()->renderState();
 
-        Util::gameInstance()->window->display();
+        Util::gameInstance()->getWindow().display();
     }
         return 0;
 }

@@ -19,10 +19,7 @@ class GameState;
 class GameManager {
 public:
     explicit GameManager(sf::ContextSettings &settings, bool enableAudio = false);
-    ProjectileManager& getProjectileManager();
-    AsteroidManager& getAsteroidManager();
-    ResourceManager& getResourceManager();
-    ParticleSystem& getParticleSystem();
+    void changeState(std::shared_ptr<GameState> s);
     Player& getPlayer();
     void update(double dt);
     void tickState();
@@ -31,21 +28,26 @@ public:
     static int getHeight();
     double getDelta() const;
     inline static int score = 0;
-    std::shared_ptr<sf::RenderWindow> window;
-    bool enableAudio = false;
-    const double dt = 0.01;
-    sf::Clock clock;
-    void changeState(std::shared_ptr<GameState> s);
     std::shared_ptr<GameState> state;
+    sf::RenderWindow &getWindow();
+    ProjectileManager& getProjectileManager();
+    AsteroidManager& getAsteroidManager();
+    ResourceManager& getResourceManager();
+    ParticleSystem& getParticleSystem();
+    bool getEnableAudio();
+    sf::Clock getClock();
+private:
+    sf::Clock clock;
+    bool enableAudio = false;
+    std::shared_ptr<sf::RenderWindow> window;
     Player player;
     ProjectileManager projectileManager;
     AsteroidManager asteroidManager;
     ResourceManager resourceManager;
     ParticleSystem particleSystem;
+    const double dt = 0.01;
     const static int WIDTH = 800;
     const static int HEIGHT = 600;
-
-    sf::RenderWindow &getWindow();
 };
 
 

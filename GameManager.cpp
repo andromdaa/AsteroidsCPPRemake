@@ -78,3 +78,11 @@ sf::RenderWindow &GameManager::getWindow() {
     return *window;
 }
 
+bool GameManager::getEnableAudio() {
+    return enableAudio;
+}
+
+sf::Clock GameManager::getClock() {
+    return clock;
+}
+
