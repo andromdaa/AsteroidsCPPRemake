@@ -120,7 +120,7 @@ void ActiveState::tickState() {
 }
 
 void ActiveState::renderState() {
-    GameState::renderState();
+    window.draw(gameManager.getParticleSystem());
     player.drawPlayerElements(window);
     projectileManager.drawAll(window);
     asteroidManager.drawAll(window);

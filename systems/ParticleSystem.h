@@ -16,7 +16,7 @@ public:
     void update(sf::Time elapsed);
     void reset();
 private:
-    virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
+    void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 private:
     struct Particle {
         sf::Vector2f velocity;
