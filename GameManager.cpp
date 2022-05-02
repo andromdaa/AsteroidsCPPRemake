@@ -10,29 +10,38 @@
 
 GameManager::GameManager(sf::ContextSettings& settings)
         :
-        window(sf::VideoMode(GameManager::WIDTH, GameManager::HEIGHT), "Asteroids",
-               sf::Style::Default, settings),
+        window(new sf::RenderWindow(sf::VideoMode(GameManager::WIDTH, GameManager::HEIGHT), "Asteroids", sf::Style::Default,
+                                    settings)),
                enableAudio(false)
         {
-    state = BeginState::Instance(window, *this);
+    state = BeginState::Instance(*window, *this);
 }
 
 GameManager::GameManager(sf::ContextSettings& settings, bool enableAudio)
         :
-        window(sf::VideoMode(GameManager::WIDTH, GameManager::HEIGHT), "Asteroids",
-               sf::Style::Default, settings),
+        window(new sf::RenderWindow(sf::VideoMode(GameManager::WIDTH, GameManager::HEIGHT), "Asteroids", sf::Style::Default,
+                                    settings)),
                enableAudio(enableAudio)
 {
-    state = BeginState::Instance(window, *this);
+    state = BeginState::Instance(*window, *this);
+}
+
+
+GameManager::GameManager(sf::ContextSettings &settings, bool enableAudio, sf::RenderWindow* window)
+:
+window(window),
+enableAudio(enableAudio)
+{
+    state = BeginState::Instance(*window, *this);
 }
 
 void GameManager::changeState(std::shared_ptr<GameState> s) {
     state = std::move(s);
 }
 
-void GameManager::transitionState() {
-    state->transitionState(this);
-}
+//void GameManager::transitionState() {
+//    state->transitionState(this);
+//}
 
 void GameManager::tickState() {
     state->tickState();
@@ -45,3 +54,4 @@ void GameManager::renderState() {
 void GameManager::update(double dt) {
     state->update(dt);
 }
+

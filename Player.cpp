@@ -28,25 +28,42 @@ float Player::getSpeed() const {
 
 void Player::drawPlayerElements(sf::RenderWindow& window) {
     window.draw(*this);
-    for(auto& live : healthSystem.lives) {
-        window.draw(live);
-    }
+    healthSystem.drawElements(window);
 }
 
-HealthSystem::HealthSystem() {
+HealthSystem::HealthSystem() :
+life(sf::CircleShape(15.f, 3))
+{
+    life.setFillColor(sf::Color::Transparent);
+    life.setFillColor(sf::Color::Transparent);
+    life.setOutlineColor(sf::Color::White);
+    life.setOutlineThickness(1.f);
+    life.setOrigin(life.getRadius(), life.getRadius());
+}
+
+void HealthSystem::drawElements(sf::RenderWindow& window) {
     for(int i = 0; i < livesCtr; i++) {
-        auto& live = lives[i];
-        live = sf::CircleShape(15.f, 3);
-        live.setFillColor(sf::Color::Transparent);
-        live.setOutlineColor(sf::Color::White);
-        live.setOutlineThickness(1.f);
-        live.setOrigin(lives->getRadius(), lives->getRadius());
-        live.setPosition((lives->getRadius() + (lives->getRadius() * (2 * i))), 50);
+        life.setPosition((life.getRadius() + (life.getRadius() * (2 * i))), 50);
+        window.draw(life);
     }
 }
 
 int HealthSystem::decreaseLives() {
-    return --livesCtr;
+    livesCtr--;
+    return livesCtr;
 }
 
+void HealthSystem::reset() {
+    livesCtr = 3;
+}
+
+void Player::reset() {
+    setRotation(0);
+    setPosition(ActiveState::getWidth() / 2.f, ActiveState::getHeight() / 2.f);
+    isColliding = false;
+    healthSystem.reset();
+    leftRotationSpeed = 0;
+    rightRotationSpeed = 0;
+    speed = 0.f;
+}
 

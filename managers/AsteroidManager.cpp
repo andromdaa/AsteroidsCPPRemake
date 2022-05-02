@@ -49,6 +49,11 @@ void AsteroidManager::drawAll(sf::RenderWindow &window) {
     }
 }
 
+void AsteroidManager::reset() {
+    asteroids.clear();
+    createAsteroids();
+}
+
 //std::list<sf::ConvexShape> &AsteroidManager::getAsteroids() {
 //    return asteroids;
 //}

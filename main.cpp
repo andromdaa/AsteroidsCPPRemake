@@ -11,7 +11,7 @@ int main() {
     double currentTime = clock.getElapsedTime().asSeconds();
     double accumulator = 0.0;
 
-    while (Util::gameInstance()->window.isOpen()) {
+    while (Util::gameInstance()->window->isOpen()) {
         double newTime = clock.getElapsedTime().asSeconds();
         double frameTime = newTime - currentTime;
         if(frameTime > 0.25) {
@@ -31,30 +31,18 @@ int main() {
         }
 
         //handle all events / state triggers
-        Util::gameInstance()->window.clear();
+        Util::gameInstance()->window->clear();
 
         Util::gameInstance()->renderState();
 
-        Util::gameInstance()->window.display();
+        Util::gameInstance()->window->display();
     }
         return 0;
 }
-//    std::ofstream sinValues;
-//    sinValues.open("sinValues.txt");
-//    for(int i = 0; i < 201; i++) {
-//        float rads = M_PI/180;
-//        double valOne = (100 * sin(1.8 * i * rads) + 300);
-//        double valTwo = (100 * sin(1.8 * (i + 1) * rads) + 300);
-//        double val = valOne - valTwo;
-//        sinValues << val << std::endl;
-//    }
-//    sinValues.close();
-
 /*
  * TODO:
  * Should be able to access window from GameState in all state classes
  * Start screen - log player positions and asteroid positions to file and have BeginState emulate that
- * Health System
  * Smooth asteroid movement/rotation (perlin noise?)
  * Break larger asteroids into smaller when destroyed
  * Progressive rotation speed

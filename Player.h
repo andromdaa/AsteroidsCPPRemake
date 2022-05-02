@@ -11,7 +11,9 @@ class HealthSystem {
 public:
     HealthSystem();
     int decreaseLives();
-    sf::CircleShape lives[3];
+    sf::CircleShape life;
+    void reset();
+    void drawElements(sf::RenderWindow& window);
 private:
     int livesCtr = 3;
 };
@@ -21,6 +23,7 @@ public:
     explicit Player();
     float getSpeed() const;
     void drawPlayerElements(sf::RenderWindow& window);
+    void reset();
 private:
     bool isColliding = false;
     void updatePlayerPos(double dt);

@@ -35,3 +35,7 @@ std::list<sf::CircleShape>& ProjectileManager::getProjectiles() {
     return projectiles;
 }
 
+void ProjectileManager::reset() {
+    projectiles.clear();
+}
+

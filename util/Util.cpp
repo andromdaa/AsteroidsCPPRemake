@@ -9,6 +9,7 @@
 #include "../managers/AsteroidManager.h"
 #include "../GameManager.h"
 #include "../Player.h"
+#include "../states/ActiveState.h"
 
 
 int Util::removeCollisions(ProjectileManager& projectileManagerL, AsteroidManager& asteroidManagerL) {
@@ -108,18 +109,26 @@ std::shared_ptr<GameManager> Util::createGameManager() {
     return std::unique_ptr<GameManager>(p);
 }
 
-std::shared_ptr<GameManager> Util::resetGame() {
-    gameInstance().reset();
-    return createGameManager();
+std::shared_ptr<GameManager> Util::createGameManager(const std::shared_ptr<sf::RenderWindow>& window) {
+    sf::ContextSettings settings;
+    settings.antialiasingLevel = 8;
+    auto p = new GameManager(settings, false, window.get());
+    return std::unique_ptr<GameManager>(p);
+}
+
+void Util::resetGame() {
+    std::shared_ptr<GameManager> instance = gameInstance();
+    ActiveState::Instance(*instance->window, *instance)->reset();
+    instance->state = ActiveState::Instance(*instance->window, *instance);
 }
 
 std::shared_ptr<GameManager> Util::gameInstance() {
-    static std::shared_ptr<GameManager> self;
-    if(self == nullptr) {
+    static std::shared_ptr<GameManager> self = nullptr;
+    if(self  == nullptr) {
         auto p = createGameManager();
-        self = std::shared_ptr<GameManager>(p);
+        self  = std::shared_ptr<GameManager>(p);
     }
-    return self;
+    return self ;
 }
 
 

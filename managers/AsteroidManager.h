@@ -14,6 +14,7 @@ public:
     explicit AsteroidManager(GameState& gameState);
     void drawAll(sf::RenderWindow& window);
     void createAsteroids();
+    void reset();
 private:
     friend class Util;
     GameState& gameState;

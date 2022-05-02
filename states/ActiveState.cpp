@@ -87,13 +87,11 @@ void ActiveState::handleEvents() {
     sf::Event event{};
     window.pollEvent(event);
     bool collision = Util::checkPlayerCollision(player, asteroidManager);
-//    std::cout << collision << std::endl;
 
     //if player is colliding and was previously not colliding
     if(collision && !player.isColliding) {
         player.isColliding = true;
         int lives = player.healthSystem.decreaseLives();
-        player.healthSystem.lives[lives].setOutlineColor(sf::Color::Transparent);
         if (lives <= 0) transitionState(&gameManager);
     } else if(!collision && player.isColliding) {
         player.isColliding = false;
@@ -128,6 +126,16 @@ void ActiveState::renderState() {
 
 void ActiveState::transitionState(GameManager *g) {
     changeState(g, EndState::Instance(window, gameManager));
+    isActive = false;
+}
+
+void ActiveState::reset() {
+    player.reset();
+    particleSystem.reset();
+    window.clear();
+    projectileManager.reset();
+    asteroidManager.reset();
+    score = 0;
 }
 
 

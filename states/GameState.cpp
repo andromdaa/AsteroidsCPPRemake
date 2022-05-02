@@ -67,6 +67,3 @@ void GameState::update(double dt) {
     GameState::dt = dt;
 }
 
-
-
-

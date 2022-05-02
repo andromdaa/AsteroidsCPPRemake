@@ -17,6 +17,9 @@ public:
     void draw(sf::RenderWindow&, sf::CircleShape& projectile);
     void spawnProjectile(Player& player);
     std::list<sf::CircleShape>& getProjectiles();
+
+    void reset();
+
 private:
     friend class Util;
     GameState& gameState;

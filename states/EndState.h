@@ -14,11 +14,8 @@ public:
 private:
     sf::Text gameOverText;
     sf::Text finalScoreText;
-
-    void tickState();
-
+    void tickState() override;
     void update(double dt);
-
     void renderState();
 };
 

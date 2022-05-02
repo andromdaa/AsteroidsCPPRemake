@@ -10,6 +10,8 @@
 #include "../managers/ProjectileManager.h"
 #include "../managers/ResourceManager.h"
 #include "../CustomSFMLShapes/ParticleSystem.h"
+#include <memory>
+
 
 class ActiveState;
 class BeginState;
@@ -45,7 +47,7 @@ protected:
     void handleWindowEvents();
 private:
     friend class ParticleSystem;
-
+    friend class Util;
 };
 
 

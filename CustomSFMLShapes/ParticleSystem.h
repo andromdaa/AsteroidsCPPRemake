@@ -12,9 +12,9 @@ class GameState;
 class ParticleSystem : public sf::Drawable, public sf::Transformable {
 public:
     ParticleSystem(unsigned int count, GameState& gameState);
-
     void setEmitter(sf::Vector2f position);
     void update(sf::Time elapsed);
+    void reset();
 private:
     virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 private:
@@ -24,7 +24,6 @@ private:
     };
 
     void resetParticle(std::size_t index);
-
     GameState& gameState;
     std::vector<Particle> m_particles;
     sf::VertexArray m_vertices;
