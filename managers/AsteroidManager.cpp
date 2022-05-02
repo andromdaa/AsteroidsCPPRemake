@@ -6,14 +6,14 @@
 #include <chrono>
 #include "AsteroidManager.h"
 #include "../states/ActiveState.h"
+#include "../GameManager.h"
 
-
-AsteroidManager::AsteroidManager(GameState& gameState) : gameState(gameState) {}
+AsteroidManager::AsteroidManager(GameManager& gameManager) : gameManager(gameManager) {}
 
 void AsteroidManager::createAsteroids() {
     std::default_random_engine generator(std::chrono::system_clock::now().time_since_epoch().count());
-    std::uniform_real_distribution<float> xDistribution(10, GameState::getWidth() - 9);
-    std::uniform_real_distribution<float> yDistribution(10, GameState::getHeight() - 9);
+    std::uniform_real_distribution<float> xDistribution(10, GameManager::getWidth() - 9);
+    std::uniform_real_distribution<float> yDistribution(10, GameManager::getHeight() - 9);
     std::uniform_real_distribution<float> angleDistribution(0, 360);
 
     sf::ConvexShape shape;

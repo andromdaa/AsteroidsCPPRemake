@@ -8,42 +8,41 @@
 #include "states/ActiveState.h"
 #include "states/EndState.h"
 
-GameManager::GameManager(sf::ContextSettings& settings)
+GameManager::GameManager(sf::ContextSettings &settings, bool enableAudio)
         :
-        window(new sf::RenderWindow(sf::VideoMode(GameManager::WIDTH, GameManager::HEIGHT), "Asteroids", sf::Style::Default,
+        window(new sf::RenderWindow(sf::VideoMode(GameManager::WIDTH, GameManager::HEIGHT), "Asteroids",
+                                    sf::Style::Default,
                                     settings)),
-               enableAudio(false)
+        enableAudio(enableAudio),
+        particleSystem(1000, *this),
+        asteroidManager(*this),
+        projectileManager(*this),
+        resourceManager(),
+        player()
         {
     state = BeginState::Instance(*window, *this);
 }
 
-GameManager::GameManager(sf::ContextSettings& settings, bool enableAudio)
-        :
-        window(new sf::RenderWindow(sf::VideoMode(GameManager::WIDTH, GameManager::HEIGHT), "Asteroids", sf::Style::Default,
-                                    settings)),
-               enableAudio(enableAudio)
-{
-    state = BeginState::Instance(*window, *this);
+
+ResourceManager &GameManager::getResourceManager() {
+    return GameManager::resourceManager;
 }
 
-
-GameManager::GameManager(sf::ContextSettings &settings, bool enableAudio, sf::RenderWindow* window)
-:
-window(window),
-enableAudio(enableAudio)
-{
-    state = BeginState::Instance(*window, *this);
+ProjectileManager &GameManager::getProjectileManager() {
+    return GameManager::projectileManager;
 }
+
+AsteroidManager &GameManager::getAsteroidManager() {
+    return GameManager::asteroidManager;
+}
+
 
 void GameManager::changeState(std::shared_ptr<GameState> s) {
     state = std::move(s);
 }
 
-//void GameManager::transitionState() {
-//    state->transitionState(this);
-//}
-
 void GameManager::tickState() {
+//    particleSystem.update(elapsed);
     state->tickState();
 }
 
@@ -51,7 +50,30 @@ void GameManager::renderState() {
     state->renderState();
 }
 
-void GameManager::update(double dt) {
-    state->update(dt);
+void GameManager::update(double dt2) {
+}
+
+double GameManager::getDelta() const {
+    return dt;
+}
+
+int GameManager::getWidth() {
+    return GameManager::WIDTH;
+}
+
+int GameManager::getHeight() {
+    return GameManager::HEIGHT;
+}
+
+Player &GameManager::getPlayer() {
+    return player;
+}
+
+ParticleSystem &GameManager::getParticleSystem() {
+    return particleSystem;
+}
+
+sf::RenderWindow &GameManager::getWindow() {
+    return *window;
 }
 

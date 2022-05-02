@@ -7,11 +7,11 @@
 
 #include <SFML/Graphics.hpp>
 #include <cmath>
-class GameState;
+class GameManager;
 
 class ParticleSystem : public sf::Drawable, public sf::Transformable {
 public:
-    ParticleSystem(unsigned int count, GameState& gameState);
+    ParticleSystem(unsigned int count, GameManager& gameManager);
     void setEmitter(sf::Vector2f position);
     void update(sf::Time elapsed);
     void reset();
@@ -24,7 +24,7 @@ private:
     };
 
     void resetParticle(std::size_t index);
-    GameState& gameState;
+    GameManager& gameManager;
     std::vector<Particle> m_particles;
     sf::VertexArray m_vertices;
     sf::Time m_lifetime;

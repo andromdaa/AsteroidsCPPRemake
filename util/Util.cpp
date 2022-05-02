@@ -5,10 +5,6 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
 #include "Util.h"
-#include "../managers/ProjectileManager.h"
-#include "../managers/AsteroidManager.h"
-#include "../GameManager.h"
-#include "../Player.h"
 #include "../states/ActiveState.h"
 
 
@@ -109,12 +105,12 @@ std::shared_ptr<GameManager> Util::createGameManager() {
     return std::unique_ptr<GameManager>(p);
 }
 
-std::shared_ptr<GameManager> Util::createGameManager(const std::shared_ptr<sf::RenderWindow>& window) {
-    sf::ContextSettings settings;
-    settings.antialiasingLevel = 8;
-    auto p = new GameManager(settings, false, window.get());
-    return std::unique_ptr<GameManager>(p);
-}
+//std::shared_ptr<GameManager> Util::createGameManager(const std::shared_ptr<sf::RenderWindow>& window) {
+//    sf::ContextSettings settings;
+//    settings.antialiasingLevel = 8;
+//    auto p = new GameManager(settings, false, window.get());
+//    return std::unique_ptr<GameManager>(p);
+//}
 
 void Util::resetGame() {
     std::shared_ptr<GameManager> instance = gameInstance();

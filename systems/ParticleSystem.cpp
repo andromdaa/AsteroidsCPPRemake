@@ -4,9 +4,10 @@
 
 #include "ParticleSystem.h"
 #include "../states/ActiveState.h"
+#include "../GameManager.h"
 
-ParticleSystem::ParticleSystem(unsigned int count, GameState& gameState) :
-        gameState(gameState),
+ParticleSystem::ParticleSystem(unsigned int count, GameManager& gameManager) :
+        gameManager(gameManager),
         m_particles(count),
         m_vertices(sf::Points, count),
         m_lifetime(sf::seconds(3.f)),
@@ -43,10 +44,11 @@ void ParticleSystem::draw(sf::RenderTarget &target, sf::RenderStates states) con
 }
 
 void ParticleSystem::resetParticle(std::size_t index) {
+    Player& player = gameManager.getPlayer();
     // give a random velocity and lifetime to the particle
-    float angle = gameState.player.getRotation();
-    float speed = gameState.player.getSpeed();
-    m_particles[index].velocity = ActiveState::getMovement(gameState.player, speed, gameState.dt);
+    float angle = player.getRotation();
+    float speed = player.getSpeed();
+    m_particles[index].velocity = ActiveState::getMovement(player, speed, gameManager.getDelta());
 
 //    m_particles[index].velocity = sf::Vector2f(std::cos(angle) * speed, std::sin(angle) * speed);
 

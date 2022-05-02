@@ -7,6 +7,12 @@
 
 #include "GameState.h"
 
+
+class Player;
+class AsteroidManager;
+class ProjectileManager;
+class ResourceManager;
+
 class ActiveState : public GameState {
 public:
     static std::shared_ptr<ActiveState> Instance(sf::RenderWindow& window, GameManager& gameManager);
@@ -19,6 +25,11 @@ public:
     static bool locationAllowed(float x, float y, sf::Vector2f movementInc, float radius);
     void reset();
 private:
+    Player& player;
+    AsteroidManager& asteroidManager;
+    ProjectileManager& projectileManager;
+    ResourceManager& resourceManager;
+    sf::RenderWindow& window;
     inline static bool isActive = false;
     explicit ActiveState(sf::RenderWindow &window, GameManager& gameManager);
 };

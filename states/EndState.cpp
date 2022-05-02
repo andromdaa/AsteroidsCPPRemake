@@ -16,23 +16,23 @@ std::shared_ptr<EndState> EndState::Instance(sf::RenderWindow& window, GameManag
 
 EndState::EndState(sf::RenderWindow& window, GameManager& gameManager) :
     GameState(window, gameManager),
-    gameOverText("Game Over!", resourceManager.font, 30),
-    finalScoreText(std::to_string(GameState::score), resourceManager.font, 24)
+    gameOverText("Game Over!", gameManager.getResourceManager().font, 30),
+    finalScoreText(std::to_string(GameManager::score), gameManager.getResourceManager().font, 24)
 {
     gameOverText.setOrigin(gameOverText.getLocalBounds().width / 2.f, gameOverText.getLocalBounds().height);
-    gameOverText.setPosition(GameState::getWidth() / 2.f, GameState::getHeight() / 2.f);
+    gameOverText.setPosition(GameManager::getWidth() / 2.f, GameManager::getHeight() / 2.f);
     finalScoreText.setPosition(gameOverText.getPosition());
     finalScoreText.move(0, 20);
-    resourceManager.playGameOver();
-    clock.restart();
+    gameManager.getResourceManager().playGameOver();
+    gameManager.clock.restart(); //why are we doing this
 }
 
 void EndState::tickState() {
     sf::Event event{};
-    window.pollEvent(event);
+    gameManager.getWindow().pollEvent(event);
 
     if (event.key.code == sf::Keyboard::Escape) {
-        window.close();
+        gameManager.getWindow().close();
     }
 
     if(event.key.code == sf::Keyboard::Space) {
@@ -50,6 +50,6 @@ void EndState::update(double dt) {
 }
 
 void EndState::renderState() {
-    window.draw(gameOverText);
-    window.draw(finalScoreText);
+    gameManager.getWindow().draw(gameOverText);
+    gameManager.getWindow().draw(finalScoreText);
 }

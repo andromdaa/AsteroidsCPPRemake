@@ -14,6 +14,8 @@ public:
     void tickState() override;
     void renderState() override;
 private:
+    std::list<sf::CircleShape> stars;
+    sf::RenderWindow& window;
     int iteration = 0;
     std::vector<sf::Text> beginText;
     void drawStars();

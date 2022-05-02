@@ -2,17 +2,16 @@
 // Created by Cole on 4/21/2022.
 //
 
-#include "states/GameState.h"
-#include "states/ActiveState.h"
 #include "Player.h"
-
+#include "GameManager.h"
+#include "states/ActiveState.h"
 
 Player::Player() :
     sf::CircleShape(15.f, 3),
     healthSystem()
     {
     setOrigin(getRadius(), getRadius());
-    setPosition(ActiveState::getWidth() / 2.f, ActiveState::getHeight() / 2.f);
+    setPosition(GameManager::getWidth() / 2.f, GameManager::getHeight() / 2.f);
 }
 
 void Player::updatePlayerPos(double dt) {
@@ -59,7 +58,7 @@ void HealthSystem::reset() {
 
 void Player::reset() {
     setRotation(0);
-    setPosition(ActiveState::getWidth() / 2.f, ActiveState::getHeight() / 2.f);
+    setPosition(GameManager::getWidth() / 2.f, GameManager::getHeight() / 2.f);
     isColliding = false;
     healthSystem.reset();
     leftRotationSpeed = 0;

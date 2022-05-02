@@ -3,8 +3,8 @@
 //
 
 #include "ResourceManager.h"
+#include "../GameManager.h"
 #include <iostream>
-#include "../states/GameState.h"
 
 ResourceManager::ResourceManager() {
     if (!music.openFromFile("assets/sounds/music.wav")) std::cout << "Music Error" << std::endl;
@@ -25,8 +25,8 @@ ResourceManager::ResourceManager() {
 }
 
 void ResourceManager::updateScore(int scoreInc, sf::RenderWindow& window) {
-    GameState::score += scoreInc;
-    text.setString("Score " + std::to_string(GameState::score));
+    GameManager::score += scoreInc;
+    text.setString("Score " + std::to_string(GameManager::score));
     window.draw(text);
 }
 

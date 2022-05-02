@@ -6,6 +6,7 @@
 #define ASTEROIDSSFML_PLAYER_H
 
 #include "SFML/Graphics.hpp"
+#include "systems/ParticleSystem.h"
 
 class HealthSystem {
 public:

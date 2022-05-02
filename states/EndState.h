@@ -15,8 +15,8 @@ private:
     sf::Text gameOverText;
     sf::Text finalScoreText;
     void tickState() override;
-    void update(double dt);
-    void renderState();
+    void update(double dt) override;
+    void renderState() override;
 };
 
 #endif //ASTEROIDSSFML_ENDSTATE_H

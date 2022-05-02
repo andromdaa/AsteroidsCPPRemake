@@ -8,16 +8,16 @@
 #include <SFML/Graphics.hpp>
 #include <list>
 
-class GameState;
+class GameManager;
 class AsteroidManager {
 public:
-    explicit AsteroidManager(GameState& gameState);
+    explicit AsteroidManager(GameManager& gameState);
     void drawAll(sf::RenderWindow& window);
     void createAsteroids();
     void reset();
 private:
     friend class Util;
-    GameState& gameState;
+    GameManager& gameManager;
     enum Sizes { SM, MED, LRG };
     const int MAX_ASTEROIDS = 10;
     std::list<sf::ConvexShape> asteroids;

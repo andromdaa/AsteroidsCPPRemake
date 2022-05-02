@@ -20,7 +20,7 @@ public:
     static int removeCollisions(ProjectileManager &projectileManagerL, AsteroidManager &asteroidManagerL);
     static int checkIntersect(int nvert, const float *vertx, const float *verty, float testx, float testy);
     static bool checkPlayerCollision(Player &player, AsteroidManager &asteroidManager);
-    static std::shared_ptr<GameManager> createGameManager(const std::shared_ptr<sf::RenderWindow>& window);
+//    static std::shared_ptr<GameManager> createGameManager(const std::shared_ptr<sf::RenderWindow>& window);
 };
 
 #endif //ASTEROIDSSFML_UTIL_H

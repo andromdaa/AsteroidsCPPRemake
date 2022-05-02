@@ -6,10 +6,10 @@
 #include "../states/ActiveState.h"
 #include "../util/Util.h"
 
-ProjectileManager::ProjectileManager(GameState& gameState) : gameState(gameState){}
+ProjectileManager::ProjectileManager(GameManager& gameManager) : gameManager(gameManager){}
 
 void ProjectileManager::draw(sf::RenderWindow& window, sf::CircleShape& projectile) {
-    sf::Vector2f speed = ActiveState::getMovement(projectile, PROJECTILE_SPEED, gameState.getDelta());
+    sf::Vector2f speed = ActiveState::getMovement(projectile, PROJECTILE_SPEED, gameManager.getDelta());
     if(ActiveState::locationAllowed(projectile.getPosition().x, projectile.getPosition().y, speed, projectile.getRadius())) {
         projectile.move(speed.x, speed.y);
         window.draw(projectile);
@@ -24,8 +24,8 @@ void ProjectileManager::spawnProjectile(Player& player) {
 }
 
 void ProjectileManager::drawAll(sf::RenderWindow& window) {
-    int scoreInc = Util::removeCollisions(gameState.getProjectileManager(), gameState.getAsteroidManager());
-    gameState.getResourceManager().updateScore(scoreInc, window);
+    int scoreInc = Util::removeCollisions(gameManager.getProjectileManager(), gameManager.getAsteroidManager());
+    gameManager.getResourceManager().updateScore(scoreInc, window);
     for(sf::CircleShape& projectile : projectiles) {
         draw(window, projectile);
     }

@@ -1,25 +1,27 @@
 //
 // Created by Cole on 4/21/2022.
 //
+
 #include "ActiveState.h"
 #include "EndState.h"
-#include "SFML/Graphics.hpp"
-#include "SFML/Window/Keyboard.hpp"
-#include "../GameManager.h"
-#include <cmath>
 #include "../util/Util.h"
 
 using namespace sf;
 
 ActiveState::ActiveState(sf::RenderWindow &window, GameManager &gameManager) :
-        GameState(window, gameManager) {
+        GameState(window, gameManager),
+        player(gameManager.getPlayer()),
+        resourceManager(gameManager.getResourceManager()),
+        asteroidManager(gameManager.getAsteroidManager()),
+        projectileManager(gameManager.getProjectileManager()),
+        window(gameManager.getWindow()) {
     resourceManager.text.setCharacterSize(24);
     asteroidManager.createAsteroids();
 }
 
 std::shared_ptr<ActiveState> ActiveState::Instance(sf::RenderWindow &window, GameManager &gameManager) {
     static std::shared_ptr<ActiveState> self;
-    if(self == nullptr) {
+    if (self == nullptr) {
         auto p = new ActiveState(window, gameManager);
         self = std::shared_ptr<ActiveState>(p);
     }
@@ -52,48 +54,48 @@ void ActiveState::handleInput() {
 
     if (Keyboard::isKeyPressed(sf::Keyboard::Up)) {
         player.speed += player.SPEED_INC;
-        player.updatePlayerPos(dt);
+        player.updatePlayerPos(gameManager.getDelta());
     }
 
     if (!Keyboard::isKeyPressed(sf::Keyboard::Up)) {
         if (player.speed > 0) player.speed -= 2.5f; //passively slow down the player, approach 0
         if (player.speed < 0) player.speed += 1.f; //if player is bounced off wall, passively approach 0 speed
-        player.updatePlayerPos(dt);
+        player.updatePlayerPos(gameManager.getDelta());
     } else {
         player.speed -= 0.50f; //actively slow player
-        player.updatePlayerPos(dt);
+        player.updatePlayerPos(gameManager.getDelta());
     }
 
-    particleSystem.setEmitter(player.getPosition());
+    gameManager.getParticleSystem().setEmitter(player.getPosition());
 }
 
 sf::Vector2f ActiveState::getMovement(const sf::Shape &shape, float speed, double dt) {
-    float x = (float) (speed * sin(shape.getRotation() * (float) PI / 180) *
-                       dt);
-    float y = (float) (-speed * cos(shape.getRotation() * (float) PI / 180) *
-                       dt);
+    auto x = (float) (speed * sin(shape.getRotation() * (float) M_PI / 180) *
+                      dt);
+    auto y = (float) (-speed * cos(shape.getRotation() * (float) M_PI / 180) *
+                      dt);
 
     return {x, y};
 }
 
 
 bool ActiveState::locationAllowed(float x, float y, sf::Vector2f movementInc, float radius) {
-    if ((x + movementInc.x) + radius > GameState::getWidth() || (x + movementInc.x) < radius) return false;
-    if ((y + movementInc.y) + radius > GameState::getHeight() || (y + movementInc.y) < radius) return false;
+    if ((x + movementInc.x) + radius > GameManager::getWidth() || (x + movementInc.x) < radius) return false;
+    if ((y + movementInc.y) + radius > GameManager::getHeight() || (y + movementInc.y) < radius) return false;
     return true;
 }
 
 void ActiveState::handleEvents() {
     sf::Event event{};
     window.pollEvent(event);
-    bool collision = Util::checkPlayerCollision(player, asteroidManager);
+    bool collision = Util::checkPlayerCollision(player, gameManager.getAsteroidManager());
 
     //if player is colliding and was previously not colliding
-    if(collision && !player.isColliding) {
+    if (collision && !player.isColliding) {
         player.isColliding = true;
         int lives = player.healthSystem.decreaseLives();
         if (lives <= 0) transitionState(&gameManager);
-    } else if(!collision && player.isColliding) {
+    } else if (!collision && player.isColliding) {
         player.isColliding = false;
     }
 
@@ -106,8 +108,8 @@ void ActiveState::handleEvents() {
             isActive = true;
             return;
         }
-        projectileManager.spawnProjectile(player);
-        if (gameManager.enableAudio) resourceManager.playFireSound();
+        gameManager.getProjectileManager().spawnProjectile(player);
+        if (gameManager.enableAudio) gameManager.getResourceManager().playFireSound();
     }
 }
 
@@ -131,11 +133,11 @@ void ActiveState::transitionState(GameManager *g) {
 
 void ActiveState::reset() {
     player.reset();
-    particleSystem.reset();
+    gameManager.getParticleSystem().reset();
     window.clear();
     projectileManager.reset();
     asteroidManager.reset();
-    score = 0;
+    GameManager::score = 0;
 }
 
 
