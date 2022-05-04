@@ -94,7 +94,7 @@ bool Util::checkPlayerCollision(Player& player, AsteroidManager& asteroidManager
 std::shared_ptr<GameManager> Util::createGameManager() {
     sf::ContextSettings settings;
     settings.antialiasingLevel = 8;
-    auto p = new GameManager(settings, false);
+    auto p = new GameManager(settings, true);
     return std::unique_ptr<GameManager>(p);
 }
 

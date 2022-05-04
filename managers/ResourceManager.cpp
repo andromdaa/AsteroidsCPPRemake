@@ -18,10 +18,6 @@ ResourceManager::ResourceManager() {
     text.setFont(font);
     text.setFillColor(sf::Color::White);
 
-//    if(!gameOverBuffer.loadFromFile("assets/sounds/gameover.ogg")) std::cout << "Game Over Sound Error" << std::endl;
-//    gameOver.setBuffer(gameOverBuffer);
-//    gameOver.setVolume(50.f);
-
 }
 
 void ResourceManager::updateScore(int scoreInc, sf::RenderWindow& window) {
