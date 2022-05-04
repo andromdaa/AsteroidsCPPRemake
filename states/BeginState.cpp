@@ -13,7 +13,6 @@
 BeginState::BeginState(sf::RenderWindow &window, GameManager &gameManager) : GameState(window, gameManager),
                                                                              window(window) {
     if (gameManager.getEnableAudio()) gameManager.getResourceManager().startMusic();
-    generateStars();
     spawnText();
 }
 
@@ -32,7 +31,6 @@ void BeginState::transitionState(GameManager *g) {
 
 void BeginState::renderState() {
     GameState::renderState();
-    drawStars();
     drawText();
 }
 
@@ -83,29 +81,7 @@ void BeginState::spawnText() {
     }
 }
 
-void BeginState::generateStars() {
-    //(move)? stars based on what direction that player is facing
-    std::default_random_engine generator(std::chrono::system_clock::now().time_since_epoch().count());
-    std::uniform_real_distribution<float> xDistribution(10, (float) GameManager::getWidth() - 10);
-    std::uniform_real_distribution<float> yDistribution(10, (float) GameManager::getHeight() - 10);
-    std::uniform_real_distribution<float> sizeDistribution(1, 3);
 
-
-    for (int i = 0; i < MAX_STARS; i++) {
-        sf::CircleShape star(sizeDistribution(generator));
-        star.setOrigin(star.getRadius(), star.getRadius());
-        star.setPosition(xDistribution(generator), yDistribution(generator));
-        stars.push_back(star);
-    }
-}
-
-void BeginState::drawStars() {
-    auto sIt = stars.begin();
-    while (sIt != stars.end()) {
-        window.draw(*sIt);
-        sIt++;
-    }
-}
 
 
 

@@ -19,7 +19,7 @@ EndState::EndState(sf::RenderWindow& window, GameManager& gameManager) :
     gameOverText("Game Over!", gameManager.getResourceManager().font, 30),
     finalScoreText(std::to_string(GameManager::score), gameManager.getResourceManager().font, 24)
 {
-    gameOverText.setOrigin(gameOverText.getLocalBounds().width / 2.f, gameOverText.getLocalBounds().height);
+    gameOverText.setOrigin(gameOverText.getLocalBounds().width / 2.f, gameOverText.getLocalBounds().height / 2.f);
     gameOverText.setPosition(GameManager::getWidth() / 2.f, GameManager::getHeight() / 2.f);
     finalScoreText.setPosition(gameOverText.getPosition());
     finalScoreText.move(0, 20);

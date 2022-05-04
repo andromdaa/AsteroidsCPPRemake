@@ -12,6 +12,7 @@ int Util::removeCollisions(ProjectileManager& projectileManagerL, AsteroidManage
     int scoreInc = 0;
     auto pIt = projectileManagerL.projectiles.begin(); //transition into getter
     auto aIt = asteroidManagerL.asteroids.begin(); //transition into getter
+    auto sIt = asteroidManagerL.seeds.begin();
 
     for(int i = 0; i < projectileManagerL.getProjectiles().size(); i++) {
         if(pIt == projectileManagerL.getProjectiles().end()) break;
@@ -43,6 +44,8 @@ int Util::removeCollisions(ProjectileManager& projectileManagerL, AsteroidManage
                 scoreInc += (int) (asteroid->getScale().x * 50);
                 projectileManagerL.getProjectiles().erase(projectile++);
                 asteroidManagerL.asteroids.erase(asteroid++);
+                asteroidManagerL.seeds.erase(sIt++);
+                asteroidManagerL.decreaseMaxAsteroids();
             }
         }
     }
@@ -59,6 +62,18 @@ int Util::checkIntersect(int nvert, const float *vertx, const float *verty, floa
     return c;
 }
 
+bool Util::intersectsPlayer(Player& player, int nvert, float* x, float* y) {
+    int intersect1 = checkIntersect(nvert, x, y, player.getTransform().transformPoint(player.getPoint(0)).x,
+                   player.getTransform().transformPoint(player.getPoint(0)).y);
+    int intersect2 = checkIntersect(nvert, x, y, player.getTransform().transformPoint(player.getPoint(1)).x,
+                                  player.getTransform().transformPoint(player.getPoint(1)).y);
+    int intersect3 = checkIntersect(nvert, x, y, player.getTransform().transformPoint(player.getPoint(2)).x,
+                                    player.getTransform().transformPoint(player.getPoint(2)).y);
+
+    return (intersect1 || intersect2) || intersect3;
+
+}
+
 bool Util::checkPlayerCollision(Player& player, AsteroidManager& asteroidManager) {
     auto aIt = asteroidManager.asteroids.begin(); //transition into getter
 
@@ -69,20 +84,10 @@ bool Util::checkPlayerCollision(Player& player, AsteroidManager& asteroidManager
         std::unique_ptr<float[]> x = getTransformX(*asteroid);
         std::unique_ptr<float[]> y = getTransformY(*asteroid);
 
-
-        //checks if any point on player intersects
-        int intersect1 = checkIntersect(6, x.get(), y.get(), player.getTransform().transformPoint(player.getPoint(0)).x,
-                                        player.getTransform().transformPoint(player.getPoint(0)).y);
-        int intersect2 = checkIntersect(6, x.get(), y.get(), player.getTransform().transformPoint(player.getPoint(1)).x,
-                                        player.getTransform().transformPoint(player.getPoint(1)).y);
-        int intersect3 = checkIntersect(6, x.get(), y.get(), player.getTransform().transformPoint(player.getPoint(2)).x,
-                                        player.getTransform().transformPoint(player.getPoint(2)).y);
-
-        bool intersect = (intersect1 || intersect2) || intersect3;
-        if(intersect == 1) {
-            return true;
-        }
+        bool intersect = intersectsPlayer(player, 6, x.get(), y.get());
+        if(intersect) return true;
     }
+
     return false;
 }
 

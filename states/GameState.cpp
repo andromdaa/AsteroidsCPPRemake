@@ -23,7 +23,9 @@ void GameState::transitionState(GameManager *g) {}
 
 void GameState::tickState() {}
 
-void GameState::renderState() {}
+void GameState::renderState() {
+    gameManager.drawStars();
+}
 
 void GameState::update(double t) {}
 

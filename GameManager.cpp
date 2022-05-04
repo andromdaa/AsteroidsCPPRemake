@@ -4,6 +4,7 @@
 
 #include "GameManager.h"
 #include <utility>
+#include <chrono>
 #include "states/BeginState.h"
 #include "states/ActiveState.h"
 #include "states/EndState.h"
@@ -20,8 +21,9 @@ GameManager::GameManager(sf::ContextSettings &settings, bool enableAudio)
         resourceManager(),
         player()
         {
-    state = BeginState::Instance(*window, *this);
-}
+            generateStars();
+            state = BeginState::Instance(*window, *this);
+        }
 
 
 ResourceManager &GameManager::getResourceManager() {
@@ -86,3 +88,26 @@ sf::Clock GameManager::getClock() {
     return clock;
 }
 
+void GameManager::generateStars() {
+    //(move)? stars based on what direction that player is facing
+    std::default_random_engine generator(std::chrono::system_clock::now().time_since_epoch().count());
+    std::uniform_real_distribution<float> xDistribution(10, (float) GameManager::getWidth() - 10);
+    std::uniform_real_distribution<float> yDistribution(10, (float) GameManager::getHeight() - 10);
+    std::uniform_real_distribution<float> sizeDistribution(1, 3);
+
+
+    for (int i = 0; i < MAX_STARS; i++) {
+        sf::CircleShape star(sizeDistribution(generator));
+        star.setOrigin(star.getRadius(), star.getRadius());
+        star.setPosition(xDistribution(generator), yDistribution(generator));
+        stars.push_back(star);
+    }
+}
+
+void GameManager::drawStars() {
+    auto sIt = stars.begin();
+    while (sIt != stars.end()) {
+        window->draw(*sIt);
+        sIt++;
+    }
+}

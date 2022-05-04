@@ -35,8 +35,11 @@ public:
     ResourceManager& getResourceManager();
     ParticleSystem& getParticleSystem();
     bool getEnableAudio();
+    void drawStars();
     sf::Clock getClock();
 private:
+    std::list<sf::CircleShape> stars;
+    const int MAX_STARS = 100;
     sf::Clock clock;
     bool enableAudio = false;
     std::shared_ptr<sf::RenderWindow> window;
@@ -48,6 +51,9 @@ private:
     const double dt = 0.01;
     const static int WIDTH = 800;
     const static int HEIGHT = 600;
+
+    void generateStars();
+
 };
 
 

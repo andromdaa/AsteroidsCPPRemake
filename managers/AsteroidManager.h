@@ -16,14 +16,15 @@ public:
     void drawAll(sf::RenderWindow& window);
     void createAsteroids();
     void reset();
-    double getPerlinOffset(float xr, float yr, float zr);
     void tick();
+    void decreaseMaxAsteroids();
+    bool asteroidsRemaining();
 private:
     friend class Util;
     siv::PerlinNoise perlinNoise;
     GameManager& gameManager;
     enum Sizes { SM, MED, LRG };
-    const int MAX_ASTEROIDS = 10;
+    int MAX_ASTEROIDS = 10;
     std::list<sf::ConvexShape> asteroids;
     std::vector<unsigned int> seeds;
     float tx = 0.f;

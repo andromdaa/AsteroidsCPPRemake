@@ -22,6 +22,8 @@ public:
     static bool checkPlayerCollision(Player &player, AsteroidManager &asteroidManager);
     static std::unique_ptr<float[]> getTransformY(sf::ConvexShape& asteroid);
     static std::unique_ptr<float[]> getTransformX(sf::ConvexShape &asteroid);
+
+    static bool intersectsPlayer(Player &player, int nvert, float *x, float *y);
 };
 
 #endif //ASTEROIDSSFML_UTIL_H

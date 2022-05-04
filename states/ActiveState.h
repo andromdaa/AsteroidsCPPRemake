@@ -32,6 +32,8 @@ private:
     sf::RenderWindow& window;
     inline static bool isActive = false;
     explicit ActiveState(sf::RenderWindow &window, GameManager& gameManager);
+
+    bool locationAllowed(sf::ConvexShape &shape);
 };
 
 

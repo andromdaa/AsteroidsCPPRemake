@@ -86,9 +86,16 @@ bool ActiveState::locationAllowed(float x, float y, sf::Vector2f movementInc, fl
     return true;
 }
 
+bool ActiveState::locationAllowed(sf::ConvexShape& shape) {
+    if(Util::intersectsPlayer(player, 6, Util::getTransformX(shape).get(), Util::getTransformY(shape).get())) return false;
+    return true;
+}
+
 void ActiveState::handleEvents() {
     sf::Event event{};
     window.pollEvent(event);
+
+    if(!asteroidManager.asteroidsRemaining()) transitionState(&gameManager);
     bool collision = Util::checkPlayerCollision(player, gameManager.getAsteroidManager());
 
     //if player is colliding and was previously not colliding
@@ -123,7 +130,6 @@ void ActiveState::tickState() {
 }
 
 void ActiveState::renderState() {
-//    gameManager.getParticleSystem().drawAll();
     player.drawPlayerElements(window);
     projectileManager.drawAll(window);
     asteroidManager.drawAll(window);
@@ -137,7 +143,6 @@ void ActiveState::transitionState(GameManager *g) {
 
 void ActiveState::reset() {
     player.reset();
-//    gameManager.getParticleSystem().reset();
     window.clear();
     projectileManager.reset();
     asteroidManager.reset();

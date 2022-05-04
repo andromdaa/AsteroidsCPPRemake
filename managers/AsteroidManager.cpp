@@ -8,6 +8,7 @@
 #include "AsteroidManager.h"
 #include "../states/ActiveState.h"
 #include "../GameManager.h"
+#include "../util/Util.h"
 
 AsteroidManager::AsteroidManager(GameManager& gameManager) : gameManager(gameManager), perlinNoise(std::chrono::system_clock::now().time_since_epoch().count()) {
 }
@@ -47,8 +48,10 @@ void AsteroidManager::createAsteroids() {
         shape.setRotation(angleDistribution(generator));
         auto bounds = shape.getLocalBounds();
         shape.setOrigin(bounds.width / 2, bounds.height / 2);
-        asteroids.push_back(shape);
-        seeds.push_back(dist(rng));
+        if(!Util::intersectsPlayer(gameManager.getPlayer(), 6, Util::getTransformX(shape).get(), Util::getTransformY(shape).get())) {
+            asteroids.push_back(shape);
+            seeds.push_back(dist(rng));
+        }
     }
 }
 
@@ -90,10 +93,11 @@ void AsteroidManager::reset() {
     createAsteroids();
 }
 
-double AsteroidManager::getPerlinOffset(float xr, float yr, float zr) {
-    return perlinNoise.noise3D(xr, yr, zr);
+void AsteroidManager::decreaseMaxAsteroids() {
+    MAX_ASTEROIDS--;
 }
 
-//std::list<sf::ConvexShape> &AsteroidManager::getAsteroids() {
-//    return asteroids;
-//}
+bool AsteroidManager::asteroidsRemaining() {
+    return !asteroids.empty();
+}
+
