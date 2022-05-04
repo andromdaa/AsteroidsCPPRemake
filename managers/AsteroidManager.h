@@ -7,6 +7,7 @@
 
 #include <SFML/Graphics.hpp>
 #include <list>
+#include "../util/PerlinNoise.h"
 
 class GameManager;
 class AsteroidManager {
@@ -15,12 +16,18 @@ public:
     void drawAll(sf::RenderWindow& window);
     void createAsteroids();
     void reset();
+    double getPerlinOffset(float xr, float yr, float zr);
+    void tick();
 private:
     friend class Util;
+    siv::PerlinNoise perlinNoise;
     GameManager& gameManager;
     enum Sizes { SM, MED, LRG };
     const int MAX_ASTEROIDS = 10;
     std::list<sf::ConvexShape> asteroids;
+    std::vector<unsigned int> seeds;
+    float tx = 0.f;
+    float ty = 10000.f;
 };
 
 

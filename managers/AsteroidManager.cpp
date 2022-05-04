@@ -4,17 +4,25 @@
 
 #include <random>
 #include <chrono>
+#include <iostream>
 #include "AsteroidManager.h"
 #include "../states/ActiveState.h"
 #include "../GameManager.h"
 
-AsteroidManager::AsteroidManager(GameManager& gameManager) : gameManager(gameManager) {}
+AsteroidManager::AsteroidManager(GameManager& gameManager) : gameManager(gameManager), perlinNoise(std::chrono::system_clock::now().time_since_epoch().count()) {
+}
 
 void AsteroidManager::createAsteroids() {
+    if(asteroids.size() >= 10) return;
     std::default_random_engine generator(std::chrono::system_clock::now().time_since_epoch().count());
     std::uniform_real_distribution<float> xDistribution(10, GameManager::getWidth() - 9);
     std::uniform_real_distribution<float> yDistribution(10, GameManager::getHeight() - 9);
     std::uniform_real_distribution<float> angleDistribution(0, 360);
+
+    std::random_device dev;
+    std::mt19937 rng(dev());
+    std::uniform_int_distribution<std::mt19937::result_type> dist(1,50000); // distribution in range [1, 6]
+
 
     sf::ConvexShape shape;
     shape.setOutlineThickness(1.5);
@@ -40,18 +48,50 @@ void AsteroidManager::createAsteroids() {
         auto bounds = shape.getLocalBounds();
         shape.setOrigin(bounds.width / 2, bounds.height / 2);
         asteroids.push_back(shape);
+        seeds.push_back(dist(rng));
     }
 }
 
+void AsteroidManager::tick() {
+    createAsteroids();
+}
+
 void AsteroidManager::drawAll(sf::RenderWindow &window) {
-    for(const auto& asteroid : asteroids) {
+    auto aIt = asteroids.begin(); //transition into getter
+    int i = 0;
+
+    for(auto& asteroid : asteroids) {
+        perlinNoise.reseed(seeds[i++]);
+
+        auto view = window.getViewport(window.getView());
+        view.width += 25;
+        view.height += 25;
+        if(!view.contains(static_cast<const sf::Vector2<int>>(asteroid.getPosition()))) {
+            asteroids.erase(aIt++);
+            continue;
+        }
+
+
+        auto delta = gameManager.getDelta();
+        auto xOffset = perlinNoise.noise1D(tx / 2);
+        auto yOffset = perlinNoise.noise1D(ty / 2);
+
+        asteroid.move(xOffset * delta, yOffset * delta);
         window.draw(asteroid);
+
+        aIt++;
     }
+    tx += 0.00001;
+    ty += 0.00001;
 }
 
 void AsteroidManager::reset() {
     asteroids.clear();
     createAsteroids();
+}
+
+double AsteroidManager::getPerlinOffset(float xr, float yr, float zr) {
+    return perlinNoise.noise3D(xr, yr, zr);
 }
 
 //std::list<sf::ConvexShape> &AsteroidManager::getAsteroids() {

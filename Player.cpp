@@ -14,8 +14,11 @@ Player::Player() :
     setPosition(GameManager::getWidth() / 2.f, GameManager::getHeight() / 2.f);
 }
 
-void Player::updatePlayerPos(double dt) {
-    sf::Vector2f movement = ActiveState::getMovement(*this, speed, dt);
+void Player::updatePlayerPos(double dt, bool backwards) {
+    sf::Vector2f movement;
+    if(backwards) movement = ActiveState::getMovement(*this, -speed, dt);
+    else movement = ActiveState::getMovement(*this, speed, dt);
+
     if(ActiveState::locationAllowed(getPosition().x, getPosition().y, movement, getRadius())) {
         move(movement.x, movement.y);
     } else speed = -speed;

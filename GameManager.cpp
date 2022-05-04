@@ -43,7 +43,7 @@ void GameManager::changeState(std::shared_ptr<GameState> s) {
 
 void GameManager::tickState() {
     auto elapsed = clock.restart();
-    particleSystem.update(elapsed);
+//    particleSystem.update(elapsed);
     state->tickState();
 }
 

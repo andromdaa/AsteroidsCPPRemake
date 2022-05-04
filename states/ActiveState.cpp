@@ -94,6 +94,7 @@ void ActiveState::handleEvents() {
     //if player is colliding and was previously not colliding
     if (collision && !player.isColliding) {
         player.isColliding = true;
+        player.speed = -player.speed;
         int lives = player.healthSystem.decreaseLives();
         if (lives <= 0) transitionState(&gameManager);
     } else if (!collision && player.isColliding) {
@@ -116,12 +117,13 @@ void ActiveState::handleEvents() {
 
 void ActiveState::tickState() {
     GameState::tickState();
+    asteroidManager.tick();
     handleEvents();
     handleInput();
 }
 
 void ActiveState::renderState() {
-    gameManager.getParticleSystem().drawAll();
+//    gameManager.getParticleSystem().drawAll();
     player.drawPlayerElements(window);
     projectileManager.drawAll(window);
     asteroidManager.drawAll(window);
@@ -130,6 +132,7 @@ void ActiveState::renderState() {
 void ActiveState::transitionState(GameManager *g) {
     changeState(g, EndState::Instance(window, gameManager));
     isActive = false;
+    gameManager.getResourceManager().stopMusic();
 }
 
 void ActiveState::reset() {

@@ -28,6 +28,8 @@ private:
     sf::Music music;
     sf::SoundBuffer gameOverBuffer;
     sf::Sound gameOver;
+
+    void stopMusic();
 };
 
 

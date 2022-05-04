@@ -42,6 +42,10 @@ void ResourceManager::playGameOver() {
     gameOver.play();
 }
 
+void ResourceManager::stopMusic() {
+    music.stop();
+}
+
 
 
 //ResourceManager *ResourceManager::Instance() {

@@ -27,7 +27,7 @@ public:
     void reset();
 private:
     bool isColliding = false;
-    void updatePlayerPos(double dt);
+    void updatePlayerPos(double dt, bool backwards = false);
     friend class GameManager;
     friend class ActiveState;
     HealthSystem healthSystem;

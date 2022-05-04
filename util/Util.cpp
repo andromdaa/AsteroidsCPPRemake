@@ -65,33 +65,21 @@ bool Util::checkPlayerCollision(Player& player, AsteroidManager& asteroidManager
     for(int j = 0; j < asteroidManager.asteroids.size(); j++) {
         if(aIt == asteroidManager.asteroids.end()) break;
         auto asteroid = std::next(aIt, j);
-        float x[] {
-                asteroid->getTransform().transformPoint(asteroid->getPoint(0)).x,
-                asteroid->getTransform().transformPoint(asteroid->getPoint(1)).x,
-                asteroid->getTransform().transformPoint(asteroid->getPoint(2)).x,
-                asteroid->getTransform().transformPoint(asteroid->getPoint(3)).x,
-                asteroid->getTransform().transformPoint(asteroid->getPoint(4)).x,
-                asteroid->getTransform().transformPoint(asteroid->getPoint(5)).x,
-        };
-        float y[] = {
-                asteroid->getTransform().transformPoint(asteroid->getPoint(0)).y,
-                asteroid->getTransform().transformPoint(asteroid->getPoint(1)).y,
-                asteroid->getTransform().transformPoint(asteroid->getPoint(2)).y,
-                asteroid->getTransform().transformPoint(asteroid->getPoint(3)).y,
-                asteroid->getTransform().transformPoint(asteroid->getPoint(4)).y,
-                asteroid->getTransform().transformPoint(asteroid->getPoint(5)).y,
-        };
 
-        int intersect1 = checkIntersect(6, x, y, player.getTransform().transformPoint(player.getPoint(0)).x,
+        std::unique_ptr<float[]> x = getTransformX(*asteroid);
+        std::unique_ptr<float[]> y = getTransformY(*asteroid);
+
+
+        //checks if any point on player intersects
+        int intersect1 = checkIntersect(6, x.get(), y.get(), player.getTransform().transformPoint(player.getPoint(0)).x,
                                         player.getTransform().transformPoint(player.getPoint(0)).y);
-        int intersect2 = checkIntersect(6, x, y, player.getTransform().transformPoint(player.getPoint(1)).x,
+        int intersect2 = checkIntersect(6, x.get(), y.get(), player.getTransform().transformPoint(player.getPoint(1)).x,
                                         player.getTransform().transformPoint(player.getPoint(1)).y);
-        int intersect3 = checkIntersect(6, x, y, player.getTransform().transformPoint(player.getPoint(2)).x,
+        int intersect3 = checkIntersect(6, x.get(), y.get(), player.getTransform().transformPoint(player.getPoint(2)).x,
                                         player.getTransform().transformPoint(player.getPoint(2)).y);
 
         bool intersect = (intersect1 || intersect2) || intersect3;
         if(intersect == 1) {
-            j++;
             return true;
         }
     }
@@ -101,9 +89,32 @@ bool Util::checkPlayerCollision(Player& player, AsteroidManager& asteroidManager
 std::shared_ptr<GameManager> Util::createGameManager() {
     sf::ContextSettings settings;
     settings.antialiasingLevel = 8;
-    auto p = new GameManager(settings, true);
+    auto p = new GameManager(settings, false);
     return std::unique_ptr<GameManager>(p);
 }
+
+std::unique_ptr<float[]> Util::getTransformY(sf::ConvexShape& asteroid) {
+    std::unique_ptr<float[]> y(new float[6]);
+    y[0] = asteroid.getTransform().transformPoint(asteroid.getPoint(0)).y;
+    y[1] = asteroid.getTransform().transformPoint(asteroid.getPoint(1)).y;
+    y[2] = asteroid.getTransform().transformPoint(asteroid.getPoint(2)).y;
+    y[3] = asteroid.getTransform().transformPoint(asteroid.getPoint(3)).y;
+    y[4] = asteroid.getTransform().transformPoint(asteroid.getPoint(4)).y;
+    y[5] = asteroid.getTransform().transformPoint(asteroid.getPoint(5)).y;
+    return y;
+}
+
+std::unique_ptr<float[]> Util::getTransformX(sf::ConvexShape& asteroid) {
+    std::unique_ptr<float[]> x(new float[6]);
+    x[0] = asteroid.getTransform().transformPoint(asteroid.getPoint(0)).x;
+    x[1] = asteroid.getTransform().transformPoint(asteroid.getPoint(1)).x;
+    x[2] = asteroid.getTransform().transformPoint(asteroid.getPoint(2)).x;
+    x[3] = asteroid.getTransform().transformPoint(asteroid.getPoint(3)).x;
+    x[4] = asteroid.getTransform().transformPoint(asteroid.getPoint(4)).x;
+    x[5] = asteroid.getTransform().transformPoint(asteroid.getPoint(5)).x;
+    return x;
+}
+
 
 //std::shared_ptr<GameManager> Util::createGameManager(const std::shared_ptr<sf::RenderWindow>& window) {
 //    sf::ContextSettings settings;
